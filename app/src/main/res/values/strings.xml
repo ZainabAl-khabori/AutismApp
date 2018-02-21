@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">AutismApp</string>
+
+    <resources>
+        <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+        <string name="facebook_application_id" translatable="false">409070889544197</string>
+        <string name="facebook_login_protocol_scheme" translatable="false">fb409070889544197</string>
+    </resources>
+
 </resources>
