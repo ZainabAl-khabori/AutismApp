@@ -4,5 +4,7 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">409070889544197</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb409070889544197</string>
+    <string name="don_t_have_an_acount_sign_up">Don\'t have an acount? Sign up!</string>
+    <string name="login">Login</string>
 
 </resources>
