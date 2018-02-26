@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "474244546314",
+    "firebase_url": "https://autismapp-b0b6a.firebaseio.com",
+    "project_id": "autismapp-b0b6a",
+    "storage_bucket": "autismapp-b0b6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474244546314:android:aac3b94ea4855c52",
+        "android_client_info": {
+          "package_name": "worldontheotherside.wordpress.com.autismapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474244546314-ha5n3dhr0ht0b09rvu0c51a470dtcdil.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "worldontheotherside.wordpress.com.autismapp",
+            "certificate_hash": "6dbd10bc5e090fe7592529ee2a297864d5def8d2"
+          }
+        },
+        {
+          "client_id": "474244546314-shkrimi225u9ls9bffsg4p6p4eroe66j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2h5h51ACWidFDP7yBwB7WdRDh2UcKr5k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474244546314-shkrimi225u9ls9bffsg4p6p4eroe66j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
