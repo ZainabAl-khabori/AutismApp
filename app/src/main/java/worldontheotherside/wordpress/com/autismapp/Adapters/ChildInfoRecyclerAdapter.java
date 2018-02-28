@@ -1,6 +1,7 @@
 package worldontheotherside.wordpress.com.autismapp.Adapters;
 
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 
+import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Fragments.ChildInfoFragment;
 import worldontheotherside.wordpress.com.autismapp.R;
 
@@ -29,34 +31,40 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public interface OnItemClickListener { public void onClick(View view, int position); }
 
-    public class TextInputViewHolder extends RecyclerView.ViewHolder
+    public class TextInputViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private TextInputLayout textInputLayoutTextInput;
         private TextInputEditText editTextInput;
         private TextView textViewNotSure;
 
         public TextInputViewHolder(View itemView) {
             super(itemView);
 
+            textInputLayoutTextInput = (TextInputLayout) itemView.findViewById(R.id.textInputLayoutTextInput);
             editTextInput = (TextInputEditText) itemView.findViewById(R.id.editTextInput);
             textViewNotSure = (TextView) itemView.findViewById(R.id.textViewNotSure);
         }
 
         public TextInputEditText getEditTextInput() { return editTextInput; }
 
-        public void setEditTextInput(TextInputEditText editTextInput) { this.editTextInput = editTextInput; }
-
         public TextView getTextViewNotSure() { return textViewNotSure; }
 
-        public void setTextViewNotSure(TextView textViewNotSure) { this.textViewNotSure = textViewNotSure; }
+        public TextInputLayout getTextInputLayoutTextInput() { return textInputLayoutTextInput; }
 
+        @Override
         public void onClick(View view)
         {
             if(onItemClickListener != null)
                 onItemClickListener.onClick(view, getAdapterPosition());
+
+            if(view.getId() == textViewNotSure.getId())
+            {
+                //
+            }
         }
     }
 
-    public class GenderViewHolder extends RecyclerView.ViewHolder
+    public class GenderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private RadioButton radioButtonMale;
         private RadioButton radioButtonFemale;
@@ -70,12 +78,9 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         public RadioButton getRadioButtonMale() { return radioButtonMale; }
 
-        public void setRadioButtonMale(RadioButton radioButtonMale) { this.radioButtonMale = radioButtonMale; }
-
         public RadioButton getRadioButtonFemale() { return radioButtonFemale; }
 
-        public void setRadioButtonFemale(RadioButton radioButtonFemale) { this.radioButtonFemale = radioButtonFemale; }
-
+        @Override
         public void onClick(View view)
         {
             if(onItemClickListener != null)
@@ -83,7 +88,7 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public class PhotoInputViewHolder extends RecyclerView.ViewHolder
+    public class PhotoInputViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private CircularImageView imageViewPhoto;
         private TextView textViewUrl;
@@ -99,16 +104,11 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         public CircularImageView getImageViewPhoto() { return imageViewPhoto; }
 
-        public void setImageViewPhoto(CircularImageView imageViewPhoto) { this.imageViewPhoto = imageViewPhoto; }
-
         public TextView getTextViewUrl() { return textViewUrl; }
-
-        public void setTextViewUrl(TextView textViewUrl) { this.textViewUrl = textViewUrl; }
 
         public Button getButtonBrowse() { return buttonBrowse; }
 
-        public void setButtonBrowse(Button buttonBrowse) { this.buttonBrowse = buttonBrowse; }
-
+        @Override
         public void onClick(View view)
         {
             if(onItemClickListener != null)
@@ -116,7 +116,7 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public class ButtonViewHolder extends RecyclerView.ViewHolder
+    public class ButtonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private Button buttonCreateAccount;
 
@@ -128,8 +128,7 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         public Button getButtonCreateAccount() { return buttonCreateAccount; }
 
-        public void setButtonCreateAccount(Button buttonCreateAccount) { this.buttonCreateAccount = buttonCreateAccount; }
-
+        @Override
         public void onClick(View view)
         {
             if(onItemClickListener != null)
@@ -150,20 +149,21 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         switch(viewType)
         {
             case TEXT:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.child_info_text_input_view_holder, parent, false);
+                view = inflater.inflate(R.layout.child_info_text_input_view_holder, parent, false);
                 return new TextInputViewHolder(view);
             case GENDER:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.child_info_gender_view_holder, parent, false);
+                view = inflater.inflate(R.layout.child_info_gender_view_holder, parent, false);
                 return new GenderViewHolder(view);
             case PHOTO:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.child_info_photo_view_holder, parent, false);
+                view = inflater.inflate(R.layout.child_info_photo_view_holder, parent, false);
                 return new PhotoInputViewHolder(view);
             case BUTTON:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.child_info_button_view_holder, parent, false);
+                view = inflater.inflate(R.layout.child_info_button_view_holder, parent, false);
                 return new ButtonViewHolder(view);
             default:
                 return null;
@@ -173,6 +173,25 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+        switch(holder.getItemViewType())
+        {
+            case TEXT: TextInputViewHolder textViewHolder = (TextInputViewHolder) holder;
+                textViewHolder.getTextInputLayoutTextInput().setHint(items.get(position).getTitle());
+                textViewHolder.getEditTextInput().setCompoundDrawablesRelativeWithIntrinsicBounds(items.get(position).getIcon(), 0, 0, 0);
+                if(!items.get(position).getTitle().equals(Constants.AUTISM_SPECTRUM_SCORE))
+                    textViewHolder.getTextViewNotSure().setVisibility(View.GONE);
+                else
+                    textViewHolder.getTextViewNotSure().setOnClickListener(textViewHolder);
+                break;
+            case GENDER: // do nothing actually
+                break;
+            case PHOTO: PhotoInputViewHolder photoInputViewHolder = (PhotoInputViewHolder) holder;
+                photoInputViewHolder.getButtonBrowse().setOnClickListener(photoInputViewHolder);
+                break;
+            case BUTTON: ButtonViewHolder buttonViewHolder = (ButtonViewHolder) holder;
+                buttonViewHolder.getButtonCreateAccount().setOnClickListener(buttonViewHolder);
+                break;
+        }
     }
 
     @Override

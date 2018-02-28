@@ -86,14 +86,18 @@ public class ChildInfoFragment extends Fragment {
     {
         private String title;
         private int type;
+        private int icon;
 
-        public ChildInfoItem(String title, int type) {
+        public ChildInfoItem(String title, int type, int icon) {
             this.title = title;
             this.type = type;
+            this.icon = icon;
         }
 
         public String getTitle() { return title; }
 
         public int getType() { return type; }
+
+        public int getIcon() { return icon; }
     }
 }
