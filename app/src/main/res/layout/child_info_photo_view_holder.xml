@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/mageViewPhoto"
+        android:id="@+id/imageViewPhoto"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:adjustViewBounds="true"

@@ -81,4 +81,19 @@ public class ChildInfoFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public class ChildInfoItem
+    {
+        private String title;
+        private int type;
+
+        public ChildInfoItem(String title, int type) {
+            this.title = title;
+            this.type = type;
+        }
+
+        public String getTitle() { return title; }
+
+        public int getType() { return type; }
+    }
 }
