@@ -9,14 +9,13 @@
         android:id="@+id/imageViewPhoto"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:adjustViewBounds="true"
+        android:layout_marginEnd="10dp"
+        android:src="@android:drawable/btn_star_big_on"
         app:civ_border_color="#EEEEEE"
         app:civ_border_width="4dp"
         app:civ_shadow="true"
         app:civ_shadow_color="#8BC34A"
-        app:civ_shadow_radius="10"
-        android:layout_marginEnd="10dp"
-        app:srcCompat="@drawable/ic_dp" />
+        app:civ_shadow_radius="10" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -31,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
             android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/my_child_s_photo"
             android:textSize="16sp" />
 

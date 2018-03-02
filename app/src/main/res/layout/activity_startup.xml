@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:text="@string/login"
         android:onClick="loginAction"/>
 
@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:text="@string/don_t_have_an_acount_sign_up"
         android:onClick="signUpAction"/>
 </LinearLayout>

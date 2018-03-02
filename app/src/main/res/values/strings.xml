@@ -19,5 +19,10 @@
     <string name="not_sure_click_here">Not sure? Click here!</string>
     <string name="create_account">Create account!</string>
     <string name="autism_spectrum_score">Autism Spectrum score</string>
+    <string name="visit_a_website">Visit a website</string>
+    <string name="visit_the_nearest_hospital_or_clinic">Visit the nearest hospital or clinic</string>
+    <string name="choose_a_diagnosis_method">Choose a diagnosis method:</string>
+    <string name="name">Name</string>
+    <string name="age">Age</string>
 
 </resources>

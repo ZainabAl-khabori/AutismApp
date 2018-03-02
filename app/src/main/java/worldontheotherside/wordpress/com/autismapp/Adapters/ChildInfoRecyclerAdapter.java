@@ -1,8 +1,13 @@
 package worldontheotherside.wordpress.com.autismapp.Adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +21,7 @@ import java.util.ArrayList;
 
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Fragments.ChildInfoFragment;
+import worldontheotherside.wordpress.com.autismapp.Fragments.DiagnoseOptionsDialogFragment;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 /**
@@ -24,12 +30,13 @@ import worldontheotherside.wordpress.com.autismapp.R;
 
 public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private AppCompatActivity activity;
     private ArrayList<ChildInfoFragment.ChildInfoItem> items;
     private OnItemClickListener onItemClickListener;
 
     private final int TEXT = 0, GENDER = 1, PHOTO = 2, BUTTON = 3;
 
-    public interface OnItemClickListener { public void onClick(View view, int position); }
+    public interface OnItemClickListener { public void onClick(View view, int position, RecyclerView.ViewHolder holder); }
 
     public class TextInputViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
@@ -55,11 +62,12 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         public void onClick(View view)
         {
             if(onItemClickListener != null)
-                onItemClickListener.onClick(view, getAdapterPosition());
+                onItemClickListener.onClick(view, getAdapterPosition(), this);
 
             if(view.getId() == textViewNotSure.getId())
             {
-                //
+                DiagnoseOptionsDialogFragment dialogFragment = DiagnoseOptionsDialogFragment.newInstance();
+                dialogFragment.show(activity.getSupportFragmentManager(), "diagnose_options_dialog");
             }
         }
     }
@@ -84,7 +92,7 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         public void onClick(View view)
         {
             if(onItemClickListener != null)
-                onItemClickListener.onClick(view, getAdapterPosition());
+                onItemClickListener.onClick(view, getAdapterPosition(), this);
         }
     }
 
@@ -112,7 +120,7 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         public void onClick(View view)
         {
             if(onItemClickListener != null)
-                onItemClickListener.onClick(view, getAdapterPosition());
+                onItemClickListener.onClick(view, getAdapterPosition(), this);
         }
     }
 
@@ -132,11 +140,16 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         public void onClick(View view)
         {
             if(onItemClickListener != null)
-                onItemClickListener.onClick(view, getAdapterPosition());
+                onItemClickListener.onClick(view, getAdapterPosition(), this);
+
+            // TODO: implementonClick for button
         }
     }
 
-    public ChildInfoRecyclerAdapter(ArrayList<ChildInfoFragment.ChildInfoItem> items) { this.items = items; }
+    public ChildInfoRecyclerAdapter(Context context, ArrayList<ChildInfoFragment.ChildInfoItem> items) {
+        this.items = items;
+        activity = (AppCompatActivity) context;
+    }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -177,11 +190,17 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         {
             case TEXT: TextInputViewHolder textViewHolder = (TextInputViewHolder) holder;
                 textViewHolder.getTextInputLayoutTextInput().setHint(items.get(position).getTitle());
-                textViewHolder.getEditTextInput().setCompoundDrawablesRelativeWithIntrinsicBounds(items.get(position).getIcon(), 0, 0, 0);
+                textViewHolder.getEditTextInput().setCompoundDrawablesRelativeWithIntrinsicBounds(items
+                        .get(position).getIcon(), 0, 0, 0);
+
                 if(!items.get(position).getTitle().equals(Constants.AUTISM_SPECTRUM_SCORE))
                     textViewHolder.getTextViewNotSure().setVisibility(View.GONE);
                 else
                     textViewHolder.getTextViewNotSure().setOnClickListener(textViewHolder);
+
+                if(items.get(position).getTitle().equals(Constants.NAME) || items.get(position).getTitle().equals(Constants.NAME))
+                    textViewHolder.getEditTextInput().setInputType(InputType.TYPE_CLASS_TEXT);
+
                 break;
             case GENDER: // do nothing actually
                 break;

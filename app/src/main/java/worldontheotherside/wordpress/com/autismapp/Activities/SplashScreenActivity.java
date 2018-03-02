@@ -10,13 +10,17 @@ import android.util.Log;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.HashMap;
 
+import worldontheotherside.wordpress.com.autismapp.Data.Keys;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
     private FirebaseUser user;
     private Intent intent;
+
+    public static HashMap<String, String> STRING_CONSTANTS = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +44,14 @@ public class SplashScreenActivity extends AppCompatActivity {
             else
             {
                 intent = new Intent(SplashScreenActivity.this, StartupActivity.class);
-
-
             }
+
+            STRING_CONSTANTS.put(Keys.NAME, getString(R.string.name));
+            STRING_CONSTANTS.put(Keys.AGE, getString(R.string.age));
+            STRING_CONSTANTS.put(Keys.GENDER, getString(R.string.gender));
+            STRING_CONSTANTS.put(Keys.CHILD_PHOTO, getString(R.string.my_child_s_photo));
+            STRING_CONSTANTS.put(Keys.AUSTISM_SPECTRUM_SCORE, getString(R.string.autism_spectrum_score));
+            STRING_CONSTANTS.put(Keys.CREATE_ACCOUNT, getString(R.string.create_account));
 
             return null;
         }

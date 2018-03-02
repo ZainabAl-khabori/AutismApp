@@ -52,6 +52,12 @@ public class StartupActivity extends AppCompatActivity {
         Log.v("SIGNIN", "unknown response");
     }
 
+    public void signUpAction(View view)
+    {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
     private void login()
     {
         Intent intent = new Intent(StartupActivity.this, MainActivity.class);
