@@ -15,8 +15,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     private String[] tabs = {"Personal info", "My child's info"};
 
-    public TabsPagerAdapter(FragmentManager fm) {
+    private int id;
+
+    public TabsPagerAdapter(FragmentManager fm, int id) {
         super(fm);
+        this.id = id;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         switch(position)
         {
             case 0:
-                return PersonalInfoFragment.newPersonalInfoFragment(1);
+                return PersonalInfoFragment.newPersonalInfoFragment(id);
             case 1:
                 return ChildInfoFragment.newChildInfoFragment(2);
             default:

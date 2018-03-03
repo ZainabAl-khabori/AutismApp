@@ -2,34 +2,39 @@ package worldontheotherside.wordpress.com.autismapp.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RadioButton;
 
+import java.util.ArrayList;
+
+import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
+import worldontheotherside.wordpress.com.autismapp.Adapters.ChildInfoRecyclerAdapter;
+import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 /**
  * Created by زينب on 2/25/2018.
  */
 
-public class PersonalInfoFragment extends Fragment implements View.OnClickListener {
+public class PersonalInfoFragment extends Fragment implements ChildInfoRecyclerAdapter.OnItemClickListener {
 
-    public static final String TAB = "tab";
+    public static final String ID = "pager id";
 
-    private RadioButton radioButtonMale;
-    private RadioButton radioButtonFemale;
-    private Button buttonNext;
+    private ArrayList<InfoItem> items;
+    private ViewPager viewPagerParent;
 
-    private int pg;
+    private int viewPagerId;
 
-    public static PersonalInfoFragment newPersonalInfoFragment(int page)
+    public static PersonalInfoFragment newPersonalInfoFragment(int id)
     {
         PersonalInfoFragment personalInfoFragment = new PersonalInfoFragment();
         Bundle args = new Bundle();
 
-        args.putInt(TAB, page);
+        args.putInt(ID, id);
         personalInfoFragment.setArguments(args);
 
         return personalInfoFragment;
@@ -39,7 +44,16 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pg = getArguments().getInt(TAB, 0);
+        viewPagerId = getArguments().getInt(ID, 0);
+        items = new ArrayList<>();
+
+        items.add(new InfoItem(Constants.EMAIL, Constants.CHILD_INFO_RECYCLER_TEXT_INPUT, R.drawable.ic_email));
+        items.add(new InfoItem(Constants.PASSWORD, Constants.CHILD_INFO_RECYCLER_TEXT_INPUT, R.drawable.ic_password));
+        items.add(new InfoItem(Constants.RE_PASSWORD, Constants.CHILD_INFO_RECYCLER_TEXT_INPUT, R.drawable.ic_password));
+        items.add(new InfoItem(Constants.USERNAME, Constants.CHILD_INFO_RECYCLER_TEXT_INPUT, R.drawable.ic_username));
+        items.add(new InfoItem(Constants.PHONE, Constants.CHILD_INFO_RECYCLER_TEXT_INPUT, R.drawable.ic_phone));
+        items.add(new InfoItem(Constants.GENDER, Constants.CHILD_INFO_RECYCLER_GENDER, R.drawable.ic_gender));
+        items.add(new InfoItem(Constants.FILL_CHILD_INFO, Constants.CHILD_INFO_RECYCLER_BUTTON, R.drawable.ic_help));
     }
 
     @Override
@@ -51,24 +65,21 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        radioButtonMale = view.findViewById(R.id.radioButtonMale);
-        radioButtonFemale = view.findViewById(R.id.radioButtonFemale);
-        buttonNext = view.findViewById(R.id.buttonNext);
+        viewPagerParent = (ViewPager) getActivity().findViewById(viewPagerId);
 
-        buttonNext.setOnClickListener(this);
+        RecyclerView recyclerViewPersonalInfo = (RecyclerView) view.findViewById(R.id.recyclerViewPersonalInfo);
+        ChildInfoRecyclerAdapter adapter = new ChildInfoRecyclerAdapter(getContext(), items);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        ChildInfoRecyclerAdapter.OnItemClickListener onItemClickListener = this;
+
+        recyclerViewPersonalInfo.setAdapter(adapter);
+        adapter.setOnItemClickListener(onItemClickListener);
+        recyclerViewPersonalInfo.setLayoutManager(layoutManager);
     }
 
     @Override
-    public void onClick(View view) {
-        // buttonNext onClick implementation
+    public void onClick(View view, int position, RecyclerView.ViewHolder holder) {
+        if(view.getId() == R.id.buttonCreateAccount)
+            viewPagerParent.setCurrentItem(1);
     }
-
-    public boolean isMale() { return radioButtonMale.isChecked(); }
-
-    public boolean isFemale() { return radioButtonFemale.isChecked(); }
-
-    // set up methods to interact with anything that needs interacting with
-    // Like radioButtons
-
-
 }

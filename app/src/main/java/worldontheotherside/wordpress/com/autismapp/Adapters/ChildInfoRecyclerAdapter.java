@@ -1,8 +1,6 @@
 package worldontheotherside.wordpress.com.autismapp.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +17,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 
+import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Fragments.ChildInfoFragment;
 import worldontheotherside.wordpress.com.autismapp.Fragments.DiagnoseOptionsDialogFragment;
@@ -31,7 +30,7 @@ import worldontheotherside.wordpress.com.autismapp.R;
 public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private AppCompatActivity activity;
-    private ArrayList<ChildInfoFragment.ChildInfoItem> items;
+    private ArrayList<InfoItem> items;
     private OnItemClickListener onItemClickListener;
 
     private final int TEXT = 0, GENDER = 1, PHOTO = 2, BUTTON = 3;
@@ -141,12 +140,10 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         {
             if(onItemClickListener != null)
                 onItemClickListener.onClick(view, getAdapterPosition(), this);
-
-            // TODO: implementonClick for button
         }
     }
 
-    public ChildInfoRecyclerAdapter(Context context, ArrayList<ChildInfoFragment.ChildInfoItem> items) {
+    public ChildInfoRecyclerAdapter(Context context, ArrayList<InfoItem> items) {
         this.items = items;
         activity = (AppCompatActivity) context;
     }
@@ -198,8 +195,21 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 else
                     textViewHolder.getTextViewNotSure().setOnClickListener(textViewHolder);
 
-                if(items.get(position).getTitle().equals(Constants.NAME) || items.get(position).getTitle().equals(Constants.NAME))
+                if(items.get(position).getTitle().equals(Constants.NAME)
+                        || items.get(position).getTitle().equals(Constants.USERNAME))
                     textViewHolder.getEditTextInput().setInputType(InputType.TYPE_CLASS_TEXT);
+                else if(items.get(position).getTitle().equals(Constants.EMAIL))
+                    textViewHolder.getEditTextInput().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                else if(items.get(position).getTitle().equals(Constants.PHONE))
+                    textViewHolder.getEditTextInput().setInputType(InputType.TYPE_CLASS_PHONE);
+                else if(items.get(position).getTitle().equals(Constants.PASSWORD)
+                        || items.get(position).getTitle().equals(Constants.RE_PASSWORD))
+                {
+                    textViewHolder.getEditTextInput().setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    textViewHolder.getTextInputLayoutTextInput().setPasswordVisibilityToggleEnabled(true);
+                }
+                else
+                    textViewHolder.getEditTextInput().setInputType(InputType.TYPE_CLASS_NUMBER);
 
                 break;
             case GENDER: // do nothing actually
@@ -208,6 +218,7 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 photoInputViewHolder.getButtonBrowse().setOnClickListener(photoInputViewHolder);
                 break;
             case BUTTON: ButtonViewHolder buttonViewHolder = (ButtonViewHolder) holder;
+                buttonViewHolder.getButtonCreateAccount().setText(items.get(position).getTitle());
                 buttonViewHolder.getButtonCreateAccount().setOnClickListener(buttonViewHolder);
                 break;
         }

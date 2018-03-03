@@ -31,7 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
         TabLayout tabLayoutTabs = (TabLayout) findViewById(R.id.tabLayoutTabs);
         ViewPager viewPagerTabs = (ViewPager) findViewById(R.id.viewPagerTabs);
 
-        viewPagerTabs.setAdapter(new TabsPagerAdapter(getSupportFragmentManager()));
+        viewPagerTabs.setAdapter(new TabsPagerAdapter(getSupportFragmentManager(), viewPagerTabs.getId()));
         tabLayoutTabs.setupWithViewPager(viewPagerTabs);
     }
 }
