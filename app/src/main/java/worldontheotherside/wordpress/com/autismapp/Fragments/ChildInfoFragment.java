@@ -1,9 +1,7 @@
 package worldontheotherside.wordpress.com.autismapp.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
@@ -19,40 +17,43 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
 import worldontheotherside.wordpress.com.autismapp.Adapters.ChildInfoRecyclerAdapter;
-import worldontheotherside.wordpress.com.autismapp.Adapters.TabsPagerAdapter;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.R;
 
-public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdapter.OnItemClickListener {
+public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdapter.OnItemClickListener,
+        PersonalInfoFragment.OnRecyclerReceivedListener {
 
     private static final String ID = "pager id";
 
     private int id;
-    ArrayList<InfoItem> items;
+    private ArrayList<InfoItem> items;
+    private ArrayList<InfoItem> list;
     private ViewPager viewPagerParent;
     private RecyclerView recyclerViewChildInfo;
+    private RecyclerView recyclerViewPersonalInfo;
 
     private CircularImageView imageViewDp;
     private TextView textViewUri;
 
     private ArrayList<TextInputEditText> editTextsPersonal;
-    private ArrayList<TextInputEditText> editTextsChild;
+    private HashMap<String, String> personalInfo;
+    private HashMap<String, String> childInfo;
     private TextInputLayout textInputLayoutPassword;
     private TextInputLayout textInputLayoutRePassword;
-    private RadioButton radioButtonMalePersonal;
-    private RadioButton radioButtonFemalePersonal;
-    private RadioButton radioButtonMaleChild;
-    private RadioButton radioButtonFemaleChild;
 
     private int passIndex = 0;
     private int rePassIndex = 1;
+    private FirebaseAuth auth;
 
     public ChildInfoFragment()
     {
@@ -96,6 +97,8 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         adapter.setOnItemClickListener(onItemClickListener);
         recyclerViewChildInfo.setLayoutManager(layoutManager);
 
+        auth = FirebaseAuth.getInstance();
+
         return view;
     }
 
@@ -137,25 +140,21 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
 
     private boolean allFiledPersonal()
     {
-        TabsPagerAdapter adapter = (TabsPagerAdapter) viewPagerParent.getAdapter();
-        RecyclerView recyclerViewPersonalInfo = adapter.getItem(0).getView().findViewById(R.id.recyclerViewPersonalInfo);
-
         ArrayList<TextInputLayout> layouts = new ArrayList<>();
-        int g = 5;
-        boolean allFilled = true;
         editTextsPersonal = new ArrayList<>();
+        personalInfo = new HashMap<>();
+        boolean allFilled = true;
 
-        for(int i = 0; i < items.size(); i++)
+        for(int i = 0; i < list.size(); i++)
         {
-            if(items.get(i).getType() == Constants.CHILD_INFO_RECYCLER_TEXT_INPUT)
+            if(list.get(i).getType() == Constants.CHILD_INFO_RECYCLER_TEXT_INPUT)
             {
                 RecyclerView.ViewHolder viewHolder = recyclerViewPersonalInfo.findViewHolderForAdapterPosition(i);
                 ChildInfoRecyclerAdapter.TextInputViewHolder holder = (ChildInfoRecyclerAdapter.TextInputViewHolder) viewHolder;
                 layouts.add(holder.getTextInputLayoutTextInput());
                 editTextsPersonal.add(holder.getEditTextInput());
+                personalInfo.put(list.get(i).getTitle(), holder.getEditTextInput().getText().toString());
             }
-            else if(items.get(i).getType() == Constants.CHILD_INFO_RECYCLER_GENDER)
-                g = i;
         }
 
         for(int i = 0; i < layouts.size(); i++)
@@ -177,17 +176,8 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
                 layouts.get(i).setErrorEnabled(true);
                 allFilled = false;
             }
-        }
-
-        RecyclerView.ViewHolder viewHolder = recyclerViewPersonalInfo.findViewHolderForAdapterPosition(g);
-        ChildInfoRecyclerAdapter.GenderViewHolder holder = (ChildInfoRecyclerAdapter.GenderViewHolder) viewHolder;
-        radioButtonMalePersonal = holder.getRadioButtonMale();
-        radioButtonFemalePersonal = holder.getRadioButtonFemale();
-        if(!radioButtonMalePersonal.isChecked() && !radioButtonFemalePersonal.isChecked())
-        {
-            radioButtonMalePersonal.setBackgroundColor(Color.RED);
-            radioButtonFemalePersonal.setBackgroundColor(Color.RED);
-            allFilled = false;
+            else
+                layouts.get(i).setErrorEnabled(false);
         }
 
         if(!allFilled)
@@ -199,9 +189,10 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
     private boolean allFilledChild()
     {
         ArrayList<TextInputLayout> layouts = new ArrayList<>();
+        ArrayList<TextInputEditText> editTextsChild = new ArrayList<>();
+        childInfo = new HashMap<>();
         int g = 2, p = 3;
         boolean allFilled = true;
-        editTextsChild = new ArrayList<>();
 
         for(int i = 0; i < items.size(); i++)
         {
@@ -211,11 +202,10 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
                 ChildInfoRecyclerAdapter.TextInputViewHolder holder = (ChildInfoRecyclerAdapter.TextInputViewHolder) viewHolder;
                 layouts.add(holder.getTextInputLayoutTextInput());
                 editTextsChild.add(holder.getEditTextInput());
+                childInfo.put(items.get(i).getTitle(), holder.getEditTextInput().getText().toString());
             }
             else if(items.get(i).getType() == Constants.CHILD_INFO_RECYCLER_GENDER)
                 g = i;
-            else if(items.get(i).getType() == Constants.CHILD_INFO_RECYCLER_PHOTO_INPUT)
-                p = i;
         }
 
         for(int i = 0; i < layouts.size(); i++)
@@ -226,26 +216,37 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
                 layouts.get(i).setErrorEnabled(true);
                 allFilled = false;
             }
+            else
+                layouts.get(i).setErrorEnabled(false);
         }
 
         RecyclerView.ViewHolder viewHolder = recyclerViewChildInfo.findViewHolderForAdapterPosition(g);
         ChildInfoRecyclerAdapter.GenderViewHolder holder = (ChildInfoRecyclerAdapter.GenderViewHolder) viewHolder;
-        radioButtonMaleChild = holder.getRadioButtonMale();
-        radioButtonFemaleChild = holder.getRadioButtonFemale();
+        RadioButton radioButtonMaleChild = holder.getRadioButtonMale();
+        RadioButton radioButtonFemaleChild = holder.getRadioButtonFemale();
         if(!radioButtonMaleChild.isChecked() && !radioButtonFemaleChild.isChecked())
         {
             radioButtonMaleChild.setBackgroundColor(Color.RED);
             radioButtonFemaleChild.setBackgroundColor(Color.RED);
             allFilled = false;
         }
+        else
+        {
+            radioButtonMaleChild.setBackgroundColor(Color.WHITE);
+            radioButtonFemaleChild.setBackgroundColor(Color.WHITE);
+
+            if(radioButtonMaleChild.isChecked())
+                childInfo.put(Constants.GENDER, getString(R.string.male));
+            else if(radioButtonFemaleChild.isChecked())
+                childInfo.put(Constants.GENDER, getString(R.string.female));
+        }
 
         viewHolder = recyclerViewChildInfo.findViewHolderForAdapterPosition(p);
         ChildInfoRecyclerAdapter.PhotoInputViewHolder h = (ChildInfoRecyclerAdapter.PhotoInputViewHolder) viewHolder;
-        if(h.getTextViewUrl().getText().toString().equals(Constants.CHILD_PHOTO))
-        {
-            h.getTextViewUrl().setTextColor(Color.RED);
-            allFilled = false;
-        }
+        if(h.getTextViewUrl().getText().equals(Constants.CHILD_PHOTO))
+            childInfo.put(Constants.CHILD_PHOTO, "");
+        else
+            childInfo.put(Constants.CHILD_PHOTO, h.getTextViewUrl().getText().toString());
 
         return allFilled;
     }
@@ -256,9 +257,16 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         String password = editTextsPersonal.get(passIndex).getText().toString();
         String rePassword = editTextsPersonal.get(rePassIndex).getText().toString();
 
+        Pattern patternDigits = Pattern.compile("[0-9]+");
+        Pattern patternLower = Pattern.compile("[a-z]+");
+        Pattern patternUpper = Pattern.compile("[A-Z]+");
+
         if(password.length() > 7)
         {
-            if(!password.contains("[0-9]+") || !password.contains("[a-z]+") || !password.contains("[A-Z]+"))
+            textInputLayoutPassword.setErrorEnabled(false);
+
+            if(!patternDigits.matcher(password).find() || !patternLower.matcher(password).find()
+                    || !patternUpper.matcher(password).find())
             {
                 textInputLayoutPassword.setError(getString(R.string.password_content));
                 textInputLayoutPassword.setErrorEnabled(true);
@@ -266,12 +274,16 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
             }
             else
             {
+                textInputLayoutPassword.setErrorEnabled(false);
+
                 if(!password.equals(rePassword))
                 {
                     textInputLayoutRePassword.setError(getString(R.string.password_not_match));
                     textInputLayoutRePassword.setErrorEnabled(true);
                     correct = false;
                 }
+                else
+                    textInputLayoutRePassword.setErrorEnabled(false);
             }
         }
         else
@@ -285,5 +297,16 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
             viewPagerParent.setCurrentItem(0);
 
         return correct;
+    }
+
+    private void createAccount()
+    {
+
+    }
+
+    @Override
+    public void onRecyclerReceived(RecyclerView recyclerView, ArrayList<InfoItem> items) {
+        recyclerViewPersonalInfo = recyclerView;
+        list = items;
     }
 }

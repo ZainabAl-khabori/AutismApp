@@ -26,7 +26,12 @@
     <string name="age">Age</string>
     <string name="this_field_cannot_be_empty">This field cannot be empty</string>
     <string name="password_length">The password should be 8 characters or longer</string>
-    <string name="password_content">The password should contain a small letter, a capital letter, and a digit</string>
+    <string name="password_content">The password should contain at least a small letter, a capital letter, and a digit</string>
     <string name="password_not_match">This does not match the password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 
 </resources>

@@ -205,7 +205,8 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 else if(items.get(position).getTitle().equals(Constants.PASSWORD)
                         || items.get(position).getTitle().equals(Constants.RE_PASSWORD))
                 {
-                    textViewHolder.getEditTextInput().setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    textViewHolder.getEditTextInput().setInputType(InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     textViewHolder.getTextInputLayoutTextInput().setPasswordVisibilityToggleEnabled(true);
                 }
                 else

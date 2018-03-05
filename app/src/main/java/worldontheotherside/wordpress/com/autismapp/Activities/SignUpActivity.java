@@ -1,27 +1,22 @@
 package worldontheotherside.wordpress.com.autismapp.Activities;
 
-import android.content.Intent;
-import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
-import com.mikhaellopez.circularimageview.CircularImageView;
-import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
 
+import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
 import worldontheotherside.wordpress.com.autismapp.Adapters.TabsPagerAdapter;
-import worldontheotherside.wordpress.com.autismapp.Fragments.ChildInfoFragment;
+import worldontheotherside.wordpress.com.autismapp.Fragments.PersonalInfoFragment;
 import worldontheotherside.wordpress.com.autismapp.R;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements PersonalInfoFragment.OnRecyclerReceivedListener {
 
-    private TextView textViewLogin;
-
-    private CircularImageView imageViewDp;
-    private TextView textViewUrl;
+    private TabsPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +26,13 @@ public class SignUpActivity extends AppCompatActivity {
         TabLayout tabLayoutTabs = (TabLayout) findViewById(R.id.tabLayoutTabs);
         ViewPager viewPagerTabs = (ViewPager) findViewById(R.id.viewPagerTabs);
 
-        viewPagerTabs.setAdapter(new TabsPagerAdapter(getSupportFragmentManager(), viewPagerTabs.getId()));
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(), viewPagerTabs.getId());
+        viewPagerTabs.setAdapter(adapter);
         tabLayoutTabs.setupWithViewPager(viewPagerTabs);
+    }
+
+    @Override
+    public void onRecyclerReceived(RecyclerView recyclerView, ArrayList<InfoItem> items) {
+        adapter.onRecyclerReceived(recyclerView, items);
     }
 }
