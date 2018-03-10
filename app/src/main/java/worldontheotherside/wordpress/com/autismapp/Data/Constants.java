@@ -26,4 +26,7 @@ public class Constants {
     public static final String AUTISM_SPECTRUM_SCORE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.AUSTISM_SPECTRUM_SCORE);
     public static final String CREATE_ACCOUNT = SplashScreenActivity.STRING_CONSTANTS.get(Keys.CREATE_ACCOUNT);
     public static final String FILL_CHILD_INFO = SplashScreenActivity.STRING_CONSTANTS.get(Keys.NEXT_INFO);
+
+    public static final String DP = "dp";
+    public static final String EMPTY_FIELD_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EMPTY_FIELD_ERROR);
 }

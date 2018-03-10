@@ -16,7 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -301,7 +305,21 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
 
     private void createAccount()
     {
+        auth.createUserWithEmailAndPassword(personalInfo.get(Constants.EMAIL), personalInfo.get(Constants.PASSWORD))
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(Task<AuthResult> task) {
+                        if(task.isSuccessful())
+                        {
 
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(), "Couldn't create an account", Toast.LENGTH_SHORT).show();
+                            Log.v("ACCOUNT_CREATION", task.getException().getMessage());
+                        }
+                    }
+                });
     }
 
     @Override

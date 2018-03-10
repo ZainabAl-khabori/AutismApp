@@ -58,6 +58,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             STRING_CONSTANTS.put(Keys.AUSTISM_SPECTRUM_SCORE, getString(R.string.autism_spectrum_score));
             STRING_CONSTANTS.put(Keys.CREATE_ACCOUNT, getString(R.string.create_account));
             STRING_CONSTANTS.put(Keys.NEXT_INFO, getString(R.string.fill_in_my_child_s_info));
+            STRING_CONSTANTS.put(Keys.EMPTY_FIELD_ERROR, getString(R.string.this_field_cannot_be_empty));
 
             return null;
         }

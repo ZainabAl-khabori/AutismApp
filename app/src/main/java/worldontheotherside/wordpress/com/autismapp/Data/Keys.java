@@ -15,7 +15,9 @@ public class Keys {
     public static final String AGE = "age";
     public static final String GENDER = "gender";
     public static final String CHILD_PHOTO = "child photo";
+    public static final String DP = "dp";
     public static final String AUSTISM_SPECTRUM_SCORE = "autism spectrum score";
     public static final String CREATE_ACCOUNT = "create account";
     public static final String NEXT_INFO = "next info";
+    public static final String EMPTY_FIELD_ERROR = "empty field error";
 }
