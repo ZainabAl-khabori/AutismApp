@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.example.ojp.autism.InfoMainActivity">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_info_urls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="65dp"
+            android:layout_marginStart="65dp"
+            android:background="@color/colorAccent"
+            android:text="روابط مفيدة"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_info_books"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="65dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/colorAccent"
+            android:text="كتيبات"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="16sp" />
+
+
+        <Button
+            android:id="@+id/btn_info_videos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="65dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/colorAccent"
+            android:text="فيديوهات"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="16sp" />
+
+
+        <Button
+            android:id="@+id/btn_info_centers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="65dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/colorAccent"
+            android:text="مراكز متخصصة"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>
