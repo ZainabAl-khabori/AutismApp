@@ -59,6 +59,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             STRING_CONSTANTS.put(Keys.CREATE_ACCOUNT, getString(R.string.create_account));
             STRING_CONSTANTS.put(Keys.NEXT_INFO, getString(R.string.fill_in_my_child_s_info));
             STRING_CONSTANTS.put(Keys.EMPTY_FIELD_ERROR, getString(R.string.this_field_cannot_be_empty));
+            STRING_CONSTANTS.put(Keys.INVALID_PHONE_NUMBER_ERROR, getString(R.string.registration_failed_invalid_phone_number));
+            STRING_CONSTANTS.put(Keys.QUOTA_EXCEEDED_ERROR, getString(R.string.registration_failed_quota_exceeded));
 
             return null;
         }

@@ -9,7 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 public class Child {
 
     private String name;
-    private char gender;
+    private String gender;
     private int age;
     private String photo;
     private int autismSpectrumScore;
@@ -41,11 +41,11 @@ public class Child {
         this.name = name;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 

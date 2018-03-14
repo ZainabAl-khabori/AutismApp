@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,16 +25,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import worldontheotherside.wordpress.com.autismapp.API.Child;
 import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
 import worldontheotherside.wordpress.com.autismapp.Adapters.ChildInfoRecyclerAdapter;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
+import worldontheotherside.wordpress.com.autismapp.Data.Keys;
+import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdapter.OnItemClickListener,
@@ -247,10 +255,8 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
 
         viewHolder = recyclerViewChildInfo.findViewHolderForAdapterPosition(p);
         ChildInfoRecyclerAdapter.PhotoInputViewHolder h = (ChildInfoRecyclerAdapter.PhotoInputViewHolder) viewHolder;
-        if(h.getTextViewUrl().getText().equals(Constants.CHILD_PHOTO))
-            childInfo.put(Constants.CHILD_PHOTO, "");
-        else
-            childInfo.put(Constants.CHILD_PHOTO, h.getTextViewUrl().getText().toString());
+        if(!h.getTextViewUrl().getText().equals(Constants.CHILD_PHOTO))
+            childInfo.put(Constants.CHILD_PHOTO,  h.getTextViewUrl().getText().toString());
 
         return allFilled;
     }
@@ -311,15 +317,32 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
                     public void onComplete(Task<AuthResult> task) {
                         if(task.isSuccessful())
                         {
+                            DBManip.updateUserProfile(auth.getCurrentUser(), personalInfo,
+                                    (AppCompatActivity)getActivity(), new OnCompleteListener() {
+                                @Override
+                                public void onComplete(Task task) {
 
+                                }
+                            });
                         }
                         else
                         {
-                            Toast.makeText(getContext(), "Couldn't create an account", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.couldn_t_create_an_account, Toast.LENGTH_SHORT).show();
                             Log.v("ACCOUNT_CREATION", task.getException().getMessage());
                         }
                     }
                 });
+    }
+
+    private void createChildProfile()
+    {
+        Child child = new Child();
+        child.setName(childInfo.get(Constants.NAME));
+        child.setAge(Integer.valueOf(childInfo.get(Constants.AGE)));
+        child.setAutismSpectrumScore(Integer.valueOf(childInfo.get(Constants.AUTISM_SPECTRUM_SCORE)));
+        child.setGender(childInfo.get(Constants.GENDER));
+        if(childInfo.containsKey(Constants.CHILD_PHOTO))
+            child.setPhoto(childInfo.get(Constants.CHILD_PHOTO));
     }
 
     @Override
