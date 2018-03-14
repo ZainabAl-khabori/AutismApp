@@ -1,15 +1,21 @@
 package worldontheotherside.wordpress.com.autismapp.Activities;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
@@ -22,6 +28,8 @@ import worldontheotherside.wordpress.com.autismapp.R;
 
 public class SignUpActivity extends AppCompatActivity implements PersonalInfoFragment.OnRecyclerReceivedListener,
         DBManip.OnDoneVerificationListener {
+
+    private final int RC_SIGN_IN = 123;
 
     private TabsPagerAdapter adapter;
 
@@ -66,6 +74,22 @@ public class SignUpActivity extends AppCompatActivity implements PersonalInfoFra
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RC_SIGN_IN){
+            if(resultCode == RESULT_OK){
+                login();
+            }
+            if(resultCode == RESULT_CANCELED){
+                Log.v("SIGNIN", "Signin failed");
+            }
+            return;
+        }
+        Log.v("SIGNIN", "unknown response");
+    }
+
+    @Override
     public void onRecyclerReceived(RecyclerView recyclerView, ArrayList<InfoItem> items) {
         adapter.onRecyclerReceived(recyclerView, items);
     }
@@ -76,5 +100,25 @@ public class SignUpActivity extends AppCompatActivity implements PersonalInfoFra
         this.verificationInProgress = verificationInProgress;
         this.callbacks = callbacks;
         this.phone = phone;
+    }
+
+    public void loginAction(View view)
+    {
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.PhoneBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                new AuthUI.IdpConfig.FacebookBuilder().build());
+
+        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build(), RC_SIGN_IN);
+    }
+
+    private void login()
+    {
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

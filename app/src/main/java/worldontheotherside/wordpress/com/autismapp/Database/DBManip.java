@@ -1,8 +1,10 @@
 package worldontheotherside.wordpress.com.autismapp.Database;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import worldontheotherside.wordpress.com.autismapp.Activities.MainActivity;
+import worldontheotherside.wordpress.com.autismapp.Activities.SignUpActivity;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Fragments.VerifyCodeDialogFragment;
 
@@ -58,7 +62,9 @@ public class DBManip {
     public static void addData(String url, String email, Object data, DatabaseReference.CompletionListener completionListener)
     {
         db = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
-        db.child(email).setValue(data, completionListener);
+        String path = email.replace('@', '_');
+        path = path.replace('.', '_');
+        db.child(path).setValue(data, completionListener);
     }
 
     public static void updateData(String url, String email, Object data, DatabaseReference.CompletionListener completionListener)
@@ -121,12 +127,20 @@ public class DBManip {
                     dialog.setOnVerifyListener(new VerifyCodeDialogFragment.OnVerifyListener() {
                         @Override
                         public void onVerify(EditText editTextCode) {
+                            Log.v("VERIFY_LISTENER", "verify button clicked");
                             if(editTextCode.getText().toString().isEmpty())
                                 editTextCode.setError(Constants.EMPTY_FIELD_ERROR);
                             else
                             {
                                 code = editTextCode.getText().toString();
                                 dialog.dismiss();
+
+                                if(activity.getClass() == SignUpActivity.class)
+                                {
+                                    Intent intent = new Intent(activity, MainActivity.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
                             }
                         }
                     });
@@ -142,9 +156,8 @@ public class DBManip {
                         @Override
                         public void onComplete(Task<AuthResult> task) {
                             FirebaseAuthUserCollisionException e = (FirebaseAuthUserCollisionException)task.getException();
-                            PhoneAuthCredential credential = (PhoneAuthCredential)e.getUpdatedCredential();
-                            if(!task.isSuccessful() && credential != null)
-                                user.linkWithCredential(credential);
+                            if(!task.isSuccessful() &&  e.getUpdatedCredential() != null)
+                                user.linkWithCredential(e.getUpdatedCredential());
                         }
                     });
                 }

@@ -2,6 +2,7 @@ package worldontheotherside.wordpress.com.autismapp.Fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -22,10 +23,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -36,9 +44,11 @@ import java.util.regex.Pattern;
 
 import worldontheotherside.wordpress.com.autismapp.API.Child;
 import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
+import worldontheotherside.wordpress.com.autismapp.Activities.MainActivity;
 import worldontheotherside.wordpress.com.autismapp.Adapters.ChildInfoRecyclerAdapter;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Data.Keys;
+import worldontheotherside.wordpress.com.autismapp.Database.AppAPI;
 import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.R;
 
@@ -132,9 +142,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
             if(allFiledPersonal() && allFilledChild())
             {
                 if(checkPassword())
-                {
-                    //
-                }
+                    createAccount();
             }
         }
     }
@@ -321,7 +329,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
                                     (AppCompatActivity)getActivity(), new OnCompleteListener() {
                                 @Override
                                 public void onComplete(Task task) {
-
+                                    createChildProfile();
                                 }
                             });
                         }
@@ -336,13 +344,39 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
 
     private void createChildProfile()
     {
-        Child child = new Child();
+        final Child child = new Child();
         child.setName(childInfo.get(Constants.NAME));
         child.setAge(Integer.valueOf(childInfo.get(Constants.AGE)));
         child.setAutismSpectrumScore(Integer.valueOf(childInfo.get(Constants.AUTISM_SPECTRUM_SCORE)));
         child.setGender(childInfo.get(Constants.GENDER));
         if(childInfo.containsKey(Constants.CHILD_PHOTO))
-            child.setPhoto(childInfo.get(Constants.CHILD_PHOTO));
+        {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            Uri path = Uri.parse(childInfo.get(Constants.CHILD_PHOTO));
+
+            storage.getReference().child("dp/" + path.getLastPathSegment()).putFile(path)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            child.setPhoto(taskSnapshot.getDownloadUrl().toString());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e) {
+                            Log.v("CHILD_DP_UPLOAD_ERROR", e.getMessage());
+                        }
+                    });
+        }
+        else
+            child.setPhoto(Constants.NO_DP_LINK);
+
+        DBManip.addData(AppAPI.CHILDREN, personalInfo.get(Constants.EMAIL), child, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                Log.v("CHILD_INFO_ADDED", "child info added");
+            }
+        });
     }
 
     @Override

@@ -15,7 +15,7 @@ import worldontheotherside.wordpress.com.autismapp.R;
 
 public class StartupActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 123;
+    private final int RC_SIGN_IN = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

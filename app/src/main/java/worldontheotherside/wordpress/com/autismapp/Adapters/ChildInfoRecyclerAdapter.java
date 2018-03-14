@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -211,6 +212,9 @@ public class ChildInfoRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 }
                 else
                     textViewHolder.getEditTextInput().setInputType(InputType.TYPE_CLASS_NUMBER);
+
+                if(position == items.size() - 2)
+                    textViewHolder.getEditTextInput().setImeOptions(EditorInfo.IME_ACTION_DONE);
 
                 break;
             case GENDER: // do nothing actually

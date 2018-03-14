@@ -27,5 +27,6 @@
         android:textSize="16sp"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
-        android:text="@string/already_have_an_account_login" />
+        android:text="@string/already_have_an_account_login"
+        android:onClick="loginAction"/>
 </LinearLayout>

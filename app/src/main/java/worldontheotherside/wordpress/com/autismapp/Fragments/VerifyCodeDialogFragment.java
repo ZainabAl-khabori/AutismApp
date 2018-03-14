@@ -41,6 +41,7 @@ public class VerifyCodeDialogFragment extends DialogFragment implements View.OnC
 
         editTextCode = (EditText) view.findViewById(R.id.editTextCode);
         buttonVerify = (Button) view.findViewById(R.id.buttonVerify);
+        buttonVerify.setOnClickListener(this);
     }
 
     public void setOnVerifyListener(OnVerifyListener onVerifyListener) { this.onVerifyListener = onVerifyListener; }
