@@ -15,7 +15,7 @@ public class Info implements Serializable {
 
 
     public String getInfoTitle () {
-        return InfoTitle;
+         return InfoTitle;
     }
 
     public void setInfoTitle (String infoTitle) {
