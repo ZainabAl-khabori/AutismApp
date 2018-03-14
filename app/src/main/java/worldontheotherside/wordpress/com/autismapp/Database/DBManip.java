@@ -4,9 +4,15 @@ import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -74,11 +80,15 @@ public class DBManip {
     }
 
     public interface OnDoneVerificationListener {
-        void notifyActivity(PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks, boolean verificationInProgress);
+        void notifyActivity(PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks,
+                            boolean verificationInProgress,
+                            String phone);
     }
 
-    public static void updateUserProfile(FirebaseUser user, HashMap<String, String> data, final AppCompatActivity activity,
-                                         OnCompleteListener onCompleteListener)
+    private static boolean verificationInProgress = false;
+
+    public static void updateUserProfile(final FirebaseUser user, final HashMap<String, String> data,
+                                         final AppCompatActivity activity, OnCompleteListener onCompleteListener)
     {
         UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
 
@@ -96,12 +106,9 @@ public class DBManip {
 
         if(data.containsKey(Constants.PHONE))
         {
-            // create credential from given phone number
-            // then update the user's phone number
+            final OnDoneVerificationListener onDoneVerificationListener = (OnDoneVerificationListener) activity;
 
-            OnDoneVerificationListener onDoneVerificationListener = (OnDoneVerificationListener) activity;
-
-            PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
+            final PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
             callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 String id;
                 String code;
@@ -128,21 +135,35 @@ public class DBManip {
 
                 @Override
                 public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-
+                    verificationInProgress = false;
+                    onDoneVerificationListener.notifyActivity(this, verificationInProgress, data.get(Constants.PHONE));
+                    user.linkWithCredential(phoneAuthCredential).addOnCompleteListener(activity,
+                            new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(Task<AuthResult> task) {
+                            FirebaseAuthUserCollisionException e = (FirebaseAuthUserCollisionException)task.getException();
+                            PhoneAuthCredential credential = (PhoneAuthCredential)e.getUpdatedCredential();
+                            if(!task.isSuccessful() && credential != null)
+                                user.linkWithCredential(credential);
+                        }
+                    });
                 }
 
                 @Override
                 public void onVerificationFailed(FirebaseException e) {
+                    verificationInProgress = false;
 
+                    if(e instanceof FirebaseAuthInvalidCredentialsException)
+                        Toast.makeText(activity, Constants.INVALID_PHONE_NUMBER_ERROR, Toast.LENGTH_SHORT).show();
+                    else if(e instanceof FirebaseTooManyRequestsException)
+                        Toast.makeText(activity, Constants.QUOTA_EXCEEDED_ERROR, Toast.LENGTH_SHORT).show();
                 }
             };
 
-            
             PhoneAuthProvider.getInstance().verifyPhoneNumber(data.get(Constants.PHONE), 90, TimeUnit.SECONDS, activity, callbacks);
-
-
+            verificationInProgress = true;
+            onDoneVerificationListener.notifyActivity(callbacks, verificationInProgress, data.get(Constants.PHONE));
         }
-
 
         UserProfileChangeRequest request = builder.build();
         user.updateProfile(request).addOnCompleteListener(onCompleteListener);

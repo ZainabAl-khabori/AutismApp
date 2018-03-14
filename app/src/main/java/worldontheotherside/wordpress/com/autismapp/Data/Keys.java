@@ -20,4 +20,9 @@ public class Keys {
     public static final String CREATE_ACCOUNT = "create account";
     public static final String NEXT_INFO = "next info";
     public static final String EMPTY_FIELD_ERROR = "empty field error";
+    public static final String INVALID_PHONE_NUMBER_ERROR = "invalid phone number error";
+    public static final String QUOTA_EXCEEDED_ERROR = "quota exceeded error";
+
+    public static final String VERIFICATION_IN_PROGRESS = "verification in progress";
+
 }

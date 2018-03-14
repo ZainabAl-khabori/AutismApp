@@ -29,12 +29,13 @@
     <string name="password_content">The password should contain at least a small letter, a capital letter, and a digit</string>
     <string name="password_not_match">This does not match the password</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="verify_phone_number">Verify phone number</string>
     <string name="enter_the_code_that_has_been_sent_to_you">Enter the code that has been sent to you:</string>
     <string name="verify">Verify</string>
+    <string name="registration_failed_invalid_phone_number">Registration failed: invlid phone number</string>
+    <string name="registration_failed_quota_exceeded">Registration failed: quota exceeded</string>
+    <string name="couldn_t_create_an_account">Couldn\'t create an account</string>
 
 </resources>

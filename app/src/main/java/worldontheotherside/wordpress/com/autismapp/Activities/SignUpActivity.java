@@ -7,16 +7,27 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.PhoneAuthProvider;
+
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
 import worldontheotherside.wordpress.com.autismapp.Adapters.TabsPagerAdapter;
+import worldontheotherside.wordpress.com.autismapp.Data.Constants;
+import worldontheotherside.wordpress.com.autismapp.Data.Keys;
+import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.Fragments.PersonalInfoFragment;
 import worldontheotherside.wordpress.com.autismapp.R;
 
-public class SignUpActivity extends AppCompatActivity implements PersonalInfoFragment.OnRecyclerReceivedListener {
+public class SignUpActivity extends AppCompatActivity implements PersonalInfoFragment.OnRecyclerReceivedListener,
+        DBManip.OnDoneVerificationListener {
 
     private TabsPagerAdapter adapter;
+
+    private boolean verificationInProgress = false;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
+    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +43,38 @@ public class SignUpActivity extends AppCompatActivity implements PersonalInfoFra
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        if(verificationInProgress)
+        {
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(phone, 90, TimeUnit.SECONDS, this, callbacks);
+            verificationInProgress = true;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(Keys.VERIFICATION_IN_PROGRESS, verificationInProgress);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        verificationInProgress = savedInstanceState.getBoolean(Keys.VERIFICATION_IN_PROGRESS);
+    }
+
+    @Override
     public void onRecyclerReceived(RecyclerView recyclerView, ArrayList<InfoItem> items) {
         adapter.onRecyclerReceived(recyclerView, items);
+    }
+
+    @Override
+    public void notifyActivity(PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks, boolean verificationInProgress,
+                               String phone) {
+        this.verificationInProgress = verificationInProgress;
+        this.callbacks = callbacks;
+        this.phone = phone;
     }
 }
