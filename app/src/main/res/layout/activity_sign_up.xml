@@ -12,6 +12,35 @@
         android:layout_height="wrap_content"
         android:id="@+id/tabLayoutTabs"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/linearLayoutProgressBar">
+
+        <ProgressBar
+            android:id="@+id/progressBarWait"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:text="@string/creating_account"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp" />
+    </LinearLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPagerTabs"
         android:layout_width="match_parent"

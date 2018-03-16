@@ -17,10 +17,14 @@ public class StartupActivity extends AppCompatActivity {
 
     private final int RC_SIGN_IN = 123;
 
+    public static StartupActivity startupActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
+
+        startupActivity = this;
     }
 
     public void loginAction(View v)

@@ -3,7 +3,9 @@ package worldontheotherside.wordpress.com.autismapp.Fragments;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,11 +56,13 @@ import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdapter.OnItemClickListener,
-        PersonalInfoFragment.OnRecyclerReceivedListener {
+        PersonalInfoFragment.OnRecyclerReceivedListener, VerifyCodeDialogFragment.OnDialogShowingListener, DBManip.OnExitListener {
 
-    private static final String ID = "pager id";
+    private static final String PAGER_ID = "pager id";
+    private static final String LINEAR_ID = "linear id";
 
-    private int id;
+    private int pagerId;
+    private int linearId;
     private ArrayList<InfoItem> items;
     private ArrayList<InfoItem> list;
     private ViewPager viewPagerParent;
@@ -77,15 +82,18 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
     private int rePassIndex = 1;
     private FirebaseAuth auth;
 
+    private boolean done;
+
     public ChildInfoFragment()
     {
         // Required empty public constructor
     }
 
-    public static ChildInfoFragment newChildInfoFragment(int pagerId) {
+    public static ChildInfoFragment newChildInfoFragment(int pagerId, int linearId) {
         ChildInfoFragment fragment = new ChildInfoFragment();
         Bundle args = new Bundle();
-        args.putInt(ID, pagerId);
+        args.putInt(PAGER_ID, pagerId);
+        args.putInt(LINEAR_ID, linearId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,13 +102,16 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
-            id = getArguments().getInt(ID, 0);
+        {
+            pagerId = getArguments().getInt(PAGER_ID, 0);
+            linearId = getArguments().getInt(LINEAR_ID, 0);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_child_info, container, false);
-        viewPagerParent = (ViewPager) getActivity().findViewById(id);
+        viewPagerParent = (ViewPager) getActivity().findViewById(pagerId);
         items = new ArrayList<>();
 
         items.add(new InfoItem(Constants.NAME, Constants.CHILD_INFO_RECYCLER_TEXT_INPUT, R.drawable.ic_username));
@@ -142,7 +153,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
             if(allFiledPersonal() && allFilledChild())
             {
                 if(checkPassword())
-                    createAccount();
+                    new CreatingAccount().execute();
             }
         }
     }
@@ -156,6 +167,18 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
             textViewUri.setText(data.getData().toString());
             Picasso.with(getContext()).load(data.getData()).into(imageViewDp);
         }
+    }
+
+    @Override
+    public void onRecyclerReceived(RecyclerView recyclerView, ArrayList<InfoItem> items) {
+        recyclerViewPersonalInfo = recyclerView;
+        list = items;
+    }
+
+    @Override
+    public void onDialogShowing(boolean showing) {
+        Log.v("DIALOG_SHOWING_CHILD", "" + showing);
+        done = showing;
     }
 
     private boolean allFiledPersonal()
@@ -194,6 +217,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
             {
                 layouts.get(i).setError(getString(R.string.this_field_cannot_be_empty));
                 layouts.get(i).setErrorEnabled(true);
+                editTextsPersonal.get(i).requestFocus();
                 allFilled = false;
             }
             else
@@ -234,6 +258,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
             {
                 layouts.get(i).setError(getString(R.string.this_field_cannot_be_empty));
                 layouts.get(i).setErrorEnabled(true);
+                editTextsChild.get(i).requestFocus();
                 allFilled = false;
             }
             else
@@ -264,7 +289,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         viewHolder = recyclerViewChildInfo.findViewHolderForAdapterPosition(p);
         ChildInfoRecyclerAdapter.PhotoInputViewHolder h = (ChildInfoRecyclerAdapter.PhotoInputViewHolder) viewHolder;
         if(!h.getTextViewUrl().getText().equals(Constants.CHILD_PHOTO))
-            childInfo.put(Constants.CHILD_PHOTO,  h.getTextViewUrl().getText().toString());
+            childInfo.put(Constants.CHILD_PHOTO, h.getTextViewUrl().getText().toString());
 
         return allFilled;
     }
@@ -288,6 +313,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
             {
                 textInputLayoutPassword.setError(getString(R.string.password_content));
                 textInputLayoutPassword.setErrorEnabled(true);
+                editTextsPersonal.get(passIndex).requestFocus();
                 correct = false;
             }
             else
@@ -298,6 +324,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
                 {
                     textInputLayoutRePassword.setError(getString(R.string.password_not_match));
                     textInputLayoutRePassword.setErrorEnabled(true);
+                    editTextsPersonal.get(rePassIndex).requestFocus();
                     correct = false;
                 }
                 else
@@ -308,6 +335,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         {
             textInputLayoutPassword.setError(getString(R.string.password_length));
             textInputLayoutPassword.setErrorEnabled(true);
+            editTextsPersonal.get(passIndex).requestFocus();
             correct = false;
         }
 
@@ -317,71 +345,113 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         return correct;
     }
 
-    private void createAccount()
-    {
-        auth.createUserWithEmailAndPassword(personalInfo.get(Constants.EMAIL), personalInfo.get(Constants.PASSWORD))
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(Task<AuthResult> task) {
-                        if(task.isSuccessful())
-                        {
-                            DBManip.updateUserProfile(auth.getCurrentUser(), personalInfo,
-                                    (AppCompatActivity)getActivity(), new OnCompleteListener() {
-                                @Override
-                                public void onComplete(Task task) {
-                                    createChildProfile();
-                                }
-                            });
-                        }
-                        else
-                        {
-                            Toast.makeText(getContext(), R.string.couldn_t_create_an_account, Toast.LENGTH_SHORT).show();
-                            Log.v("ACCOUNT_CREATION", task.getException().getMessage());
-                        }
-                    }
-                });
+    @Override
+    public void onExit(boolean done) {
+        this.done = done;
     }
 
-    private void createChildProfile()
+    private class CreatingAccount extends AsyncTask<String, HashMap<String, Object>, String>
     {
-        final Child child = new Child();
-        child.setName(childInfo.get(Constants.NAME));
-        child.setAge(Integer.valueOf(childInfo.get(Constants.AGE)));
-        child.setAutismSpectrumScore(Integer.valueOf(childInfo.get(Constants.AUTISM_SPECTRUM_SCORE)));
-        child.setGender(childInfo.get(Constants.GENDER));
-        if(childInfo.containsKey(Constants.CHILD_PHOTO))
-        {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            Uri path = Uri.parse(childInfo.get(Constants.CHILD_PHOTO));
+        private ProgressDialogFragment progressDialogFragment;
 
-            storage.getReference().child("dp/" + path.getLastPathSegment()).putFile(path)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            Log.v("PRE_EXECUTE", "on pre execute");
+
+            progressDialogFragment = ProgressDialogFragment.newProgressDialogFragment(getString(R.string.creating_account));
+            progressDialogFragment.show(getFragmentManager(), "PROGRESS_DIALOG");
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            Log.v("IN_BACKGROUND", "in background");
+
+            createAccount();
+
+            while(!done)
+            {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String aString) {
+            super.onPostExecute(aString);
+
+            Log.v("POST_EXECUTE", "on post execute");
+
+            progressDialogFragment.dismiss();
+        }
+
+        private void createAccount()
+        {
+            auth.createUserWithEmailAndPassword(personalInfo.get(Constants.EMAIL), personalInfo.get(Constants.PASSWORD))
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            child.setPhoto(taskSnapshot.getDownloadUrl().toString());
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(Exception e) {
-                            Log.v("CHILD_DP_UPLOAD_ERROR", e.getMessage());
+                        public void onComplete(Task<AuthResult> task) {
+                            if(task.isSuccessful())
+                            {
+                                DBManip.updateUserProfile(auth.getCurrentUser(), personalInfo,
+                                        (AppCompatActivity)getActivity(), new OnCompleteListener() {
+                                            @Override
+                                            public void onComplete(Task task) {
+                                                createChildProfile();
+                                            }
+                                        });
+                            }
+                            else
+                            {
+                                Toast.makeText(getContext(), R.string.couldn_t_create_an_account, Toast.LENGTH_SHORT).show();
+                                Log.v("ACCOUNT_CREATION", task.getException().getMessage());
+                            }
                         }
                     });
         }
-        else
-            child.setPhoto(Constants.NO_DP_LINK);
 
-        DBManip.addData(AppAPI.CHILDREN, personalInfo.get(Constants.EMAIL), child, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                Log.v("CHILD_INFO_ADDED", "child info added");
+        private void createChildProfile()
+        {
+            final Child child = new Child();
+            child.setName(childInfo.get(Constants.NAME));
+            child.setAge(Integer.valueOf(childInfo.get(Constants.AGE)));
+            child.setAutismSpectrumScore(Integer.valueOf(childInfo.get(Constants.AUTISM_SPECTRUM_SCORE)));
+            child.setGender(childInfo.get(Constants.GENDER));
+            if(childInfo.containsKey(Constants.CHILD_PHOTO))
+            {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                Uri path = Uri.parse(childInfo.get(Constants.CHILD_PHOTO));
+
+                storage.getReference().child("dp/" + path.getLastPathSegment()).putFile(path)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                child.setPhoto(taskSnapshot.getDownloadUrl().toString());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.v("CHILD_DP_UPLOAD_ERROR", e.getMessage());
+                            }
+                        });
             }
-        });
-    }
+            else
+                child.setPhoto(Constants.NO_DP_LINK);
 
-    @Override
-    public void onRecyclerReceived(RecyclerView recyclerView, ArrayList<InfoItem> items) {
-        recyclerViewPersonalInfo = recyclerView;
-        list = items;
+            DBManip.addData(AppAPI.CHILDREN, personalInfo.get(Constants.EMAIL), child, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    Log.v("CHILD_INFO_ADDED", "child info added");
+                }
+            });
+        }
     }
 }

@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 import worldontheotherside.wordpress.com.autismapp.Activities.MainActivity;
 import worldontheotherside.wordpress.com.autismapp.Activities.SignUpActivity;
+import worldontheotherside.wordpress.com.autismapp.Activities.StartupActivity;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Fragments.VerifyCodeDialogFragment;
 
@@ -91,6 +92,8 @@ public class DBManip {
                             String phone);
     }
 
+    public interface OnExitListener { void onExit(boolean done); }
+
     private static boolean verificationInProgress = false;
 
     public static void updateUserProfile(final FirebaseUser user, final HashMap<String, String> data,
@@ -121,6 +124,7 @@ public class DBManip {
 
                 @Override
                 public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                    Log.v("CODE_SENT", "code sent");
                     id = s;
                     FragmentManager manager = activity.getSupportFragmentManager();
                     final VerifyCodeDialogFragment dialog = VerifyCodeDialogFragment.newInstance();
@@ -128,11 +132,24 @@ public class DBManip {
                         @Override
                         public void onVerify(EditText editTextCode) {
                             Log.v("VERIFY_LISTENER", "verify button clicked");
+                            code = editTextCode.getText().toString();
                             if(editTextCode.getText().toString().isEmpty())
                                 editTextCode.setError(Constants.EMPTY_FIELD_ERROR);
                             else
                             {
-                                code = editTextCode.getText().toString();
+                                PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(id, code);
+
+                                user.linkWithCredential(phoneAuthCredential).addOnCompleteListener(activity,
+                                        new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(Task<AuthResult> task) {
+                                                FirebaseAuthUserCollisionException e = (FirebaseAuthUserCollisionException)task
+                                                        .getException();
+                                                if(!task.isSuccessful() &&  e.getUpdatedCredential() != null)
+                                                    user.linkWithCredential(e.getUpdatedCredential());
+                                            }
+                                        });
+
                                 dialog.dismiss();
 
                                 if(activity.getClass() == SignUpActivity.class)
@@ -140,16 +157,19 @@ public class DBManip {
                                     Intent intent = new Intent(activity, MainActivity.class);
                                     activity.startActivity(intent);
                                     activity.finish();
+                                    StartupActivity.startupActivity.finish();
                                 }
                             }
                         }
                     });
+                    dialog.setCancelable(false);
                     dialog.show(manager, "VERIFY_DIALOG");
                 }
 
                 @Override
                 public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                     verificationInProgress = false;
+                    final OnExitListener onExitListener = (OnExitListener) activity;
                     onDoneVerificationListener.notifyActivity(this, verificationInProgress, data.get(Constants.PHONE));
                     user.linkWithCredential(phoneAuthCredential).addOnCompleteListener(activity,
                             new OnCompleteListener<AuthResult>() {
@@ -158,6 +178,12 @@ public class DBManip {
                             FirebaseAuthUserCollisionException e = (FirebaseAuthUserCollisionException)task.getException();
                             if(!task.isSuccessful() &&  e.getUpdatedCredential() != null)
                                 user.linkWithCredential(e.getUpdatedCredential());
+
+                            onExitListener.onExit(true);
+                            Intent intent = new Intent(activity, MainActivity.class);
+                            activity.startActivity(intent);
+                            activity.finish();
+                            StartupActivity.startupActivity.finish();
                         }
                     });
                 }

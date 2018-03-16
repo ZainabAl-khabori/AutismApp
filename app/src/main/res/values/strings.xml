@@ -37,5 +37,7 @@
     <string name="registration_failed_invalid_phone_number">Registration failed: invlid phone number</string>
     <string name="registration_failed_quota_exceeded">Registration failed: quota exceeded</string>
     <string name="couldn_t_create_an_account">Couldn\'t create an account</string>
+    <string name="creating_account">Creating account...</string>
+    <string name="code_is_incorrect">Code is incorrect</string>
 
 </resources>

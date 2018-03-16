@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -24,10 +25,11 @@ import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Data.Keys;
 import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.Fragments.PersonalInfoFragment;
+import worldontheotherside.wordpress.com.autismapp.Fragments.VerifyCodeDialogFragment;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class SignUpActivity extends AppCompatActivity implements PersonalInfoFragment.OnRecyclerReceivedListener,
-        DBManip.OnDoneVerificationListener {
+        DBManip.OnDoneVerificationListener, VerifyCodeDialogFragment.OnDialogShowingListener, DBManip.OnExitListener {
 
     private final int RC_SIGN_IN = 123;
 
@@ -44,8 +46,9 @@ public class SignUpActivity extends AppCompatActivity implements PersonalInfoFra
 
         TabLayout tabLayoutTabs = (TabLayout) findViewById(R.id.tabLayoutTabs);
         ViewPager viewPagerTabs = (ViewPager) findViewById(R.id.viewPagerTabs);
+        LinearLayout linearLayoutProgressBar = (LinearLayout) findViewById(R.id.linearLayoutProgressBar);
 
-        adapter = new TabsPagerAdapter(getSupportFragmentManager(), viewPagerTabs.getId());
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(), viewPagerTabs.getId(), linearLayoutProgressBar.getId());
         viewPagerTabs.setAdapter(adapter);
         tabLayoutTabs.setupWithViewPager(viewPagerTabs);
     }
@@ -100,6 +103,17 @@ public class SignUpActivity extends AppCompatActivity implements PersonalInfoFra
         this.verificationInProgress = verificationInProgress;
         this.callbacks = callbacks;
         this.phone = phone;
+    }
+
+    @Override
+    public void onDialogShowing(boolean showing) {
+        Log.v("DIALOG_SHOWING_ACTIVITY", "" + showing);
+        adapter.onDialogShowing(showing);
+    }
+
+    @Override
+    public void onExit(boolean done) {
+        adapter.onExit(done);
     }
 
     public void loginAction(View view)

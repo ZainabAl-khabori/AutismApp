@@ -1,5 +1,6 @@
 package worldontheotherside.wordpress.com.autismapp.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -20,8 +21,10 @@ public class VerifyCodeDialogFragment extends DialogFragment implements View.OnC
     private Button buttonVerify;
 
     private OnVerifyListener onVerifyListener;
+    private OnDialogShowingListener onDialogShowingListener;
 
     public interface OnVerifyListener { void onVerify(EditText editTextCode); }
+    public interface OnDialogShowingListener { void onDialogShowing(boolean showing); }
 
     public VerifyCodeDialogFragment()
     {
@@ -36,12 +39,28 @@ public class VerifyCodeDialogFragment extends DialogFragment implements View.OnC
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try
+        {
+            onDialogShowingListener = (OnDialogShowingListener) context;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         editTextCode = (EditText) view.findViewById(R.id.editTextCode);
         buttonVerify = (Button) view.findViewById(R.id.buttonVerify);
         buttonVerify.setOnClickListener(this);
+
+        onDialogShowingListener.onDialogShowing(true);
     }
 
     public void setOnVerifyListener(OnVerifyListener onVerifyListener) { this.onVerifyListener = onVerifyListener; }

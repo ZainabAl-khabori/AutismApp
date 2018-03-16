@@ -25,4 +25,7 @@ public class Keys {
 
     public static final String VERIFICATION_IN_PROGRESS = "verification in progress";
 
+    public static final String PROGRESS_DIALOG_MESSAGE = "progress dialog message";
+
+    public static final String WRONG_CODE_ERROR = "wrong code error";
 }

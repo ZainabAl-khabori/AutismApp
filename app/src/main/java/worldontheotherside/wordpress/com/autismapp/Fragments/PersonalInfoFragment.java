@@ -105,6 +105,4 @@ public class PersonalInfoFragment extends Fragment implements ChildInfoRecyclerA
         if(view.getId() == R.id.buttonCreateAccount)
             viewPagerParent.setCurrentItem(1);
     }
-
-    public RecyclerView getRecyclerViewPersonalInfo() { return recyclerViewPersonalInfo; }
 }

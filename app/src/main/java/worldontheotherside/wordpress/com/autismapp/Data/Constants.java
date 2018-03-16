@@ -29,6 +29,7 @@ public class Constants {
 
     public static final String DP = "dp";
     public static final String EMPTY_FIELD_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EMPTY_FIELD_ERROR);
+    public static final String WRONG_CODE_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.WRONG_CODE_ERROR);
     public static final String INVALID_PHONE_NUMBER_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.INVALID_PHONE_NUMBER_ERROR);
     public static final String QUOTA_EXCEEDED_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.QUOTA_EXCEEDED_ERROR);
     public static final String NO_DP_LINK = "https://firebasestorage.googleapis.com/v0/b/autismapp-b0b6a.appspot.com/"
