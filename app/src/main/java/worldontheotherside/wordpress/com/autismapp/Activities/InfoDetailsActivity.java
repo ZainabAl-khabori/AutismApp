@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import worldontheotherside.wordpress.com.autismapp.API.Info;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class InfoDetailsActivity extends AppCompatActivity {

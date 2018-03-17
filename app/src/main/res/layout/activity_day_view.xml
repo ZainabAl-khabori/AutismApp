@@ -5,7 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="worldontheotherside.wordpress.com.autismapp.Activities.SignUpActivity">
+    android:layout_margin="10dp"
+    tools:context="worldontheotherside.wordpress.com.autismapp.Activities.DayViewActivity">
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginTop="10dp"
+        android:textSize="28sp"
+        android:textAlignment="center"/>
 
     <android.support.design.widget.TabLayout
         android:layout_width="match_parent"
@@ -16,17 +26,5 @@
         android:id="@+id/viewPagerTabs"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="15dp"
         android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/textViewLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/already_have_an_account_login"
-        android:onClick="loginAction"/>
 </LinearLayout>

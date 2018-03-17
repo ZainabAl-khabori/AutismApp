@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="worldontheotherside.wordpress.com.autismapp.Activities.EditNoteActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp">
+
+        <ImageView
+            android:id="@+id/imageViewAction"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="editSaveAction"
+            android:tint="@color/colorAccent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_edit" />
+
+        <ImageView
+            android:id="@+id/imageViewDelete"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:onClick="deleteAction"
+            android:tint="@color/colorAccent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_delete" />
+
+        <CheckBox
+            android:id="@+id/checkBoxImportant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:enabled="false"
+            android:layout_weight="1"
+            android:text="@string/important"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/editTextNote"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/border"
+        android:ems="10"
+        android:enabled="false"
+        android:gravity="top"
+        android:inputType="text|textMultiLine"
+        android:textColor="@android:color/black" />
+
+</LinearLayout>

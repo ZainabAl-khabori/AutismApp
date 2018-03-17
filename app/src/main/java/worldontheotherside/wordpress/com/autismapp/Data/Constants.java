@@ -26,12 +26,21 @@ public class Constants {
     public static final String AUTISM_SPECTRUM_SCORE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.AUSTISM_SPECTRUM_SCORE);
     public static final String CREATE_ACCOUNT = SplashScreenActivity.STRING_CONSTANTS.get(Keys.CREATE_ACCOUNT);
     public static final String FILL_CHILD_INFO = SplashScreenActivity.STRING_CONSTANTS.get(Keys.NEXT_INFO);
+    public static final String PERSONAL_INFO = SplashScreenActivity.STRING_CONSTANTS.get(Keys.PERSONAL_INFO);
+    public static final String CHILD_INFO = SplashScreenActivity.STRING_CONSTANTS.get(Keys.CHILD_INFO);
+    public static final String NOTES = SplashScreenActivity.STRING_CONSTANTS.get(Keys.NOTES);
+    public static final String EVENTS = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EVENTS);
 
     public static final String DP = "dp";
     public static final String EMPTY_FIELD_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EMPTY_FIELD_ERROR);
-    public static final String WRONG_CODE_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.WRONG_CODE_ERROR);
     public static final String INVALID_PHONE_NUMBER_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.INVALID_PHONE_NUMBER_ERROR);
     public static final String QUOTA_EXCEEDED_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.QUOTA_EXCEEDED_ERROR);
     public static final String NO_DP_LINK = "https://firebasestorage.googleapis.com/v0/b/autismapp-b0b6a.appspot.com/"
             +"o/dp%2Fface.png?alt=media&token=1e091434-fe6b-4b46-8aa8-cac32bb0b650";
+
+    public static final String DAY_DATE = "day date";
+    public static final String NEW_NOTE = "new note";
+    public static final String NOTE_BODY = "note body";
+    public static final String IMPORTANT = "important";
+    public static final String RECYCLER_POSITION = "recycler position";
 }

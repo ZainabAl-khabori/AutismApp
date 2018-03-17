@@ -45,5 +45,14 @@
     <string name="cancel">Cancel</string>
     <string name="logging_in">Logging in...</string>
     <string name="login_failed">Login failed</string>
+    <string name="today_s_notes">Today\'s notes</string>
+    <string name="edit">Edit</string>
+    <string name="time">Time:</string>
+    <string name="personal_info">Personal info</string>
+    <string name="my_child_s_info">My child\'s info</string>
+    <string name="notes">Notes</string>
+    <string name="events">Events</string>
+    <string name="important">Important</string>
+    <string name="please_wait_a_moment">Please wait a moment...</string>
 
 </resources>

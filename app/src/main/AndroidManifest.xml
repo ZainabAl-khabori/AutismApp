@@ -19,7 +19,7 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name=".Activities.StartupActivity"></activity>
+        <activity android:name=".Activities.StartupActivity" />
         <activity
             android:name=".Activities.SplashScreenActivity"
             android:label="@string/app_name"
@@ -30,7 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SignUpActivity"></activity>
+        <activity android:name=".Activities.SignUpActivity" />
+        <activity android:name=".Activities.DayViewActivity" />
+        <activity android:name=".Activities.EditNoteActivity"></activity>
     </application>
 
 </manifest>

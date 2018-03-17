@@ -15,13 +15,16 @@ public class Keys {
     public static final String AGE = "age";
     public static final String GENDER = "gender";
     public static final String CHILD_PHOTO = "child photo";
-    public static final String DP = "dp";
     public static final String AUSTISM_SPECTRUM_SCORE = "autism spectrum score";
     public static final String CREATE_ACCOUNT = "create account";
     public static final String NEXT_INFO = "next info";
     public static final String EMPTY_FIELD_ERROR = "empty field error";
     public static final String INVALID_PHONE_NUMBER_ERROR = "invalid phone number error";
     public static final String QUOTA_EXCEEDED_ERROR = "quota exceeded error";
+    public static final String PERSONAL_INFO = "personal info";
+    public static final String CHILD_INFO = "child info";
+    public static final String NOTES = "notes";
+    public static final String EVENTS = "events";
 
     public static final String VERIFICATION_IN_PROGRESS = "verification in progress";
 

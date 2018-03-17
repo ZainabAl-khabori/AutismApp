@@ -45,9 +45,8 @@ public class SignUpActivity extends AppCompatActivity implements PersonalInfoFra
 
         TabLayout tabLayoutTabs = (TabLayout) findViewById(R.id.tabLayoutTabs);
         ViewPager viewPagerTabs = (ViewPager) findViewById(R.id.viewPagerTabs);
-        LinearLayout linearLayoutProgressBar = (LinearLayout) findViewById(R.id.linearLayoutProgressBar);
 
-        adapter = new TabsPagerAdapter(getSupportFragmentManager(), viewPagerTabs.getId(), linearLayoutProgressBar.getId());
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(), viewPagerTabs.getId());
         viewPagerTabs.setAdapter(adapter);
         tabLayoutTabs.setupWithViewPager(viewPagerTabs);
     }

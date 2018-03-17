@@ -89,11 +89,10 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         // Required empty public constructor
     }
 
-    public static ChildInfoFragment newChildInfoFragment(int pagerId, int linearId) {
+    public static ChildInfoFragment newChildInfoFragment(int pagerId) {
         ChildInfoFragment fragment = new ChildInfoFragment();
         Bundle args = new Bundle();
         args.putInt(PAGER_ID, pagerId);
-        args.putInt(LINEAR_ID, linearId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -362,6 +361,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
 
             progressDialogFragment = ProgressDialogFragment.newProgressDialogFragment(getString(R.string.creating_account));
             progressDialogFragment.show(getFragmentManager(), "PROGRESS_DIALOG");
+            progressDialogFragment.setCancelable(false);
         }
 
         @Override

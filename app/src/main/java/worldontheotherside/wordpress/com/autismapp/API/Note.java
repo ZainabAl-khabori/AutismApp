@@ -9,7 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 public class Note {
 
     private String text;
-    private long date;
+    private String date;
     private boolean important;
 
     public Note()
@@ -21,7 +21,7 @@ public class Note {
     {
         for(DataSnapshot snapshot: dataSnapshot.getChildren())
         {
-            Note note = new Note();
+            Note note = snapshot.getValue(Note.class);
 
             this.text = note.text;
             this.date = note.date;
@@ -33,9 +33,9 @@ public class Note {
 
     public void setText(String text) { this.text = text; }
 
-    public long getDate() { return date; }
+    public String getDate() { return date; }
 
-    public void setDate(long date) { this.date = date; }
+    public void setDate(String date) { this.date = date; }
 
     public boolean isImportant() { return important; }
 

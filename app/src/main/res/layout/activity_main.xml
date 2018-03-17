@@ -15,7 +15,6 @@
         app:abbreviationsBarColor="@color/colorAccent"
         app:abbreviationsLabelsColor="@color/colorPrimaryDark"
         app:anotherMonthsDaysLabelsColor="@color/colorPrimary"
-        app:datePicker="true"
         app:daysLabelsColor="@color/colorPrimaryDark"
         app:forwardButtonSrc="@drawable/ic_right"
         app:headerColor="@color/colorPrimaryDark"

@@ -151,6 +151,7 @@ public class LoginOptionsDialogFragment extends BottomSheetDialogFragment implem
 
             progressDialogFragment = ProgressDialogFragment.newProgressDialogFragment(getString(R.string.logging_in));
             progressDialogFragment.show(getFragmentManager(), "PROGRESS_DIALOG");
+            progressDialogFragment.setCancelable(false);
         }
 
         @Override

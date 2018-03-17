@@ -9,6 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import worldontheotherside.wordpress.com.autismapp.API.InfoItem;
+import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.Fragments.ChildInfoFragment;
 import worldontheotherside.wordpress.com.autismapp.Fragments.PersonalInfoFragment;
@@ -21,18 +22,15 @@ import worldontheotherside.wordpress.com.autismapp.Fragments.VerifyCodeDialogFra
 public class TabsPagerAdapter extends FragmentPagerAdapter implements PersonalInfoFragment.OnRecyclerReceivedListener,
         VerifyCodeDialogFragment.OnDialogShowingListener, DBManip.OnExitListener {
 
-    private String[] tabs = {"Personal info", "My child's info"};
+    private String[] tabs = {Constants.PERSONAL_INFO, Constants.CHILD_INFO};
 
-    private int pagerId;
-    private int linearId;
     private PersonalInfoFragment personalInfoFragment;
     private ChildInfoFragment childInfoFragment;
 
-    public TabsPagerAdapter(FragmentManager fm, int pagerId, int linearId) {
+    public TabsPagerAdapter(FragmentManager fm, int pagerId) {
         super(fm);
-        this.pagerId = pagerId;
         personalInfoFragment = PersonalInfoFragment.newPersonalInfoFragment(pagerId);
-        childInfoFragment = ChildInfoFragment.newChildInfoFragment(pagerId, linearId);
+        childInfoFragment = ChildInfoFragment.newChildInfoFragment(pagerId);
     }
 
     @Override

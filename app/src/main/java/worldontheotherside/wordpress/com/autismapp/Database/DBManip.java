@@ -68,9 +68,29 @@ public class DBManip {
         db.child(path).setValue(data, completionListener);
     }
 
+    public static void addData(String url, String email, String field, Object data,
+                               DatabaseReference.CompletionListener completionListener)
+    {
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        String path = email.replace('@', '_');
+        path = path.replace('.', '_');
+        db.child(path).child(field).setValue(data, completionListener);
+    }
+
     public static void updateData(String url, String email, Object data, DatabaseReference.CompletionListener completionListener)
     {
+        String path = email.replace('@', '_');
+        path = path.replace('.', '_');
         db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(email);
+        db.setValue(data, completionListener);
+    }
+
+    public static void updateData(String url, String email, String field, Object data,
+                                  DatabaseReference.CompletionListener completionListener)
+    {
+        String path = email.replace('@', '_');
+        path = path.replace('.', '_');
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(path).child(field);
         db.setValue(data, completionListener);
     }
 

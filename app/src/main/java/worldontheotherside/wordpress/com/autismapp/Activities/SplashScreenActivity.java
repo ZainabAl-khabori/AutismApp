@@ -62,6 +62,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             STRING_CONSTANTS.put(Keys.INVALID_PHONE_NUMBER_ERROR, getString(R.string.registration_failed_invalid_phone_number));
             STRING_CONSTANTS.put(Keys.QUOTA_EXCEEDED_ERROR, getString(R.string.registration_failed_quota_exceeded));
             STRING_CONSTANTS.put(Keys.WRONG_CODE_ERROR, getString(R.string.code_is_incorrect));
+            STRING_CONSTANTS.put(Keys.PERSONAL_INFO, getString(R.string.personal_info));
+            STRING_CONSTANTS.put(Keys.CHILD_INFO, getString(R.string.my_child_s_info));
+            STRING_CONSTANTS.put(Keys.NOTES, getString(R.string.notes));
+            STRING_CONSTANTS.put(Keys.EVENTS, getString(R.string.events));
 
             return null;
         }

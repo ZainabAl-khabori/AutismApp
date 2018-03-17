@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import worldontheotherside.wordpress.com.autismapp.API.Info;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class InfoMainActivity extends AppCompatActivity {
