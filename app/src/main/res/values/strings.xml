@@ -39,5 +39,11 @@
     <string name="couldn_t_create_an_account">Couldn\'t create an account</string>
     <string name="creating_account">Creating account...</string>
     <string name="code_is_incorrect">Code is incorrect</string>
+    <string name="choose_a_login_method">Choose a login method:</string>
+    <string name="other_methods">Other methods</string>
+    <string name="login_with_email_address">Login with Email address:</string>
+    <string name="cancel">Cancel</string>
+    <string name="logging_in">Logging in...</string>
+    <string name="login_failed">Login failed</string>
 
 </resources>

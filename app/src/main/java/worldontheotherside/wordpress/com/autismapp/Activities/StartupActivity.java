@@ -11,11 +11,12 @@ import com.firebase.ui.auth.AuthUI;
 import java.util.Arrays;
 import java.util.List;
 
+import worldontheotherside.wordpress.com.autismapp.Fragments.LoginOptionsDialogFragment;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class StartupActivity extends AppCompatActivity {
 
-    private final int RC_SIGN_IN = 123;
+
 
     public static StartupActivity startupActivity;
 
@@ -29,43 +30,13 @@ public class StartupActivity extends AppCompatActivity {
 
     public void loginAction(View v)
     {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.FacebookBuilder().build());
-
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build(), RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == RC_SIGN_IN){
-            if(resultCode == RESULT_OK){
-                login();
-            }
-            if(resultCode == RESULT_CANCELED){
-                Log.v("SIGNIN", "Signin failed");
-            }
-            return;
-        }
-        Log.v("SIGNIN", "unknown response");
+        LoginOptionsDialogFragment dialogFragment = LoginOptionsDialogFragment.newInstance();
+        dialogFragment.show(getSupportFragmentManager(), "LOGIN_OPTIONS");
     }
 
     public void signUpAction(View view)
     {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
-    }
-
-    private void login()
-    {
-        Intent intent = new Intent(StartupActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

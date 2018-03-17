@@ -271,14 +271,14 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         RadioButton radioButtonFemaleChild = holder.getRadioButtonFemale();
         if(!radioButtonMaleChild.isChecked() && !radioButtonFemaleChild.isChecked())
         {
-            radioButtonMaleChild.setBackgroundColor(Color.RED);
-            radioButtonFemaleChild.setBackgroundColor(Color.RED);
+            radioButtonMaleChild.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_male_red, 0, 0, 0);
+            radioButtonFemaleChild.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_female_red, 0, 0, 0);
             allFilled = false;
         }
         else
         {
-            radioButtonMaleChild.setBackgroundColor(Color.WHITE);
-            radioButtonFemaleChild.setBackgroundColor(Color.WHITE);
+            radioButtonMaleChild.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_male, 0, 0, 0);
+            radioButtonFemaleChild.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_female, 0, 0, 0);
 
             if(radioButtonMaleChild.isChecked())
                 childInfo.put(Constants.GENDER, getString(R.string.male));

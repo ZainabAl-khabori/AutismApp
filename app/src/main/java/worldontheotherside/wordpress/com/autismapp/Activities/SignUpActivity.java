@@ -24,14 +24,13 @@ import worldontheotherside.wordpress.com.autismapp.Adapters.TabsPagerAdapter;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Data.Keys;
 import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
+import worldontheotherside.wordpress.com.autismapp.Fragments.LoginOptionsDialogFragment;
 import worldontheotherside.wordpress.com.autismapp.Fragments.PersonalInfoFragment;
 import worldontheotherside.wordpress.com.autismapp.Fragments.VerifyCodeDialogFragment;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class SignUpActivity extends AppCompatActivity implements PersonalInfoFragment.OnRecyclerReceivedListener,
         DBManip.OnDoneVerificationListener, VerifyCodeDialogFragment.OnDialogShowingListener, DBManip.OnExitListener {
-
-    private final int RC_SIGN_IN = 123;
 
     private TabsPagerAdapter adapter;
 
@@ -77,22 +76,6 @@ public class SignUpActivity extends AppCompatActivity implements PersonalInfoFra
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == RC_SIGN_IN){
-            if(resultCode == RESULT_OK){
-                login();
-            }
-            if(resultCode == RESULT_CANCELED){
-                Log.v("SIGNIN", "Signin failed");
-            }
-            return;
-        }
-        Log.v("SIGNIN", "unknown response");
-    }
-
-    @Override
     public void onRecyclerReceived(RecyclerView recyclerView, ArrayList<InfoItem> items) {
         adapter.onRecyclerReceived(recyclerView, items);
     }
@@ -118,21 +101,7 @@ public class SignUpActivity extends AppCompatActivity implements PersonalInfoFra
 
     public void loginAction(View view)
     {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.FacebookBuilder().build());
-
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build(), RC_SIGN_IN);
-    }
-
-    private void login()
-    {
-        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        LoginOptionsDialogFragment dialogFragment = LoginOptionsDialogFragment.newInstance();
+        dialogFragment.show(getSupportFragmentManager(), "LOGIN_OPTIONS");
     }
 }

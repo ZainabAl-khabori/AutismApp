@@ -7,12 +7,29 @@
     android:orientation="vertical"
     tools:context="worldontheotherside.wordpress.com.autismapp.Activities.MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
+    <com.applandeo.materialcalendarview.CalendarView
+        android:id="@+id/calendarViewCalendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20dp"/>
+        android:layout_weight="1"
+        app:abbreviationsBarColor="@color/colorAccent"
+        app:abbreviationsLabelsColor="@color/colorPrimaryDark"
+        app:anotherMonthsDaysLabelsColor="@color/colorPrimary"
+        app:datePicker="true"
+        app:daysLabelsColor="@color/colorPrimaryDark"
+        app:forwardButtonSrc="@drawable/ic_right"
+        app:headerColor="@color/colorPrimaryDark"
+        app:headerLabelColor="@color/colorPrimary"
+        app:previousButtonSrc="@drawable/ic_left"
+        app:selectionColor="@color/colorAccent"
+        app:selectionLabelColor="@color/colorPrimaryDark"
+        app:todayLabelColor="@color/colorAccent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerViewNotes"
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/button2"
