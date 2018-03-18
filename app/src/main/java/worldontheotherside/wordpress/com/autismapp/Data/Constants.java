@@ -30,6 +30,11 @@ public class Constants {
     public static final String CHILD_INFO = SplashScreenActivity.STRING_CONSTANTS.get(Keys.CHILD_INFO);
     public static final String NOTES = SplashScreenActivity.STRING_CONSTANTS.get(Keys.NOTES);
     public static final String EVENTS = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EVENTS);
+    public static final String EVENT = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EVENT);
+    public static final String DATE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.DATE);
+    public static final String TIME = SplashScreenActivity.STRING_CONSTANTS.get(Keys.TIME);
+    public static final String EVENT_DESCRIPTION = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EVENT_DESCRIPTION);
+    public static final String RINGTONE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.RINGTONE);
 
     public static final String DP = "dp";
     public static final String EMPTY_FIELD_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EMPTY_FIELD_ERROR);
@@ -40,7 +45,16 @@ public class Constants {
 
     public static final String DAY_DATE = "day date";
     public static final String NEW_NOTE = "new note";
+    public static final String NEW_EVENT = "new event";
     public static final String NOTE_BODY = "note body";
     public static final String IMPORTANT = "important";
-    public static final String RECYCLER_POSITION = "recycler position";
+    public static final String TIME_CREATED = "time created";
+
+    public static final int DELETE_ACTION_REQ = 0;
+
+    public static final int EVENT_VIEW_RECYCLER_FIELD = 0;
+    public static final int EVENT_VIEW_RECYCLER_BODY = 1;
+
+    public static final String EVENT_TITLE = "event title";
+    public static final String EVENT_INFO = "event info";
 }

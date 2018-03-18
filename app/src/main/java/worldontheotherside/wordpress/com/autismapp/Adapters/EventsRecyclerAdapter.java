@@ -18,8 +18,11 @@ import worldontheotherside.wordpress.com.autismapp.R;
 public class EventsRecyclerAdapter extends RecyclerView.Adapter<EventsRecyclerAdapter.ViewHolder> {
 
     private ArrayList<Event> data;
+    private OnItemClickListener onItemClickListener;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public interface OnItemClickListener { void onItemClick(View view, int position); }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView textViewTime;
         private TextView textViewDescription;
@@ -29,11 +32,23 @@ public class EventsRecyclerAdapter extends RecyclerView.Adapter<EventsRecyclerAd
 
             textViewTime = (TextView) itemView.findViewById(R.id.textViewTime);
             textViewDescription = (TextView) itemView.findViewById(R.id.textViewDescription);
+
+            itemView.setOnClickListener(this);
         }
 
         public TextView getTextViewTime() { return textViewTime; }
 
         public TextView getTextViewDescription() { return textViewDescription; }
+
+        @Override
+        public void onClick(View view) {
+            if(onItemClickListener != null)
+                onItemClickListener.onItemClick(view, getAdapterPosition());
+        }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public EventsRecyclerAdapter(ArrayList<Event> data) { this.data = data; }

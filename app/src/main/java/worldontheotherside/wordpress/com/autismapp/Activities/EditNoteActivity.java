@@ -1,5 +1,6 @@
 package worldontheotherside.wordpress.com.autismapp.Activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,10 @@ import android.widget.ImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import worldontheotherside.wordpress.com.autismapp.API.Note;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
@@ -29,6 +34,9 @@ public class EditNoteActivity extends AppCompatActivity {
 
     private boolean newNote;
 
+    private String email;
+    private String date;
+    private String time;
     private String noteBody;
     private boolean isImportant;
 
@@ -44,6 +52,10 @@ public class EditNoteActivity extends AppCompatActivity {
         editTextNote.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         newNote = getIntent().getBooleanExtra(Constants.NEW_NOTE, false);
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        date = getIntent().getStringExtra(Constants.DAY_DATE);
+        time = getIntent().getStringExtra(Constants.TIME_CREATED);
+
         if(newNote)
         {
             imageViewAction.setImageResource(R.drawable.ic_done);
@@ -83,7 +95,14 @@ public class EditNoteActivity extends AppCompatActivity {
 
     public void deleteAction(View view)
     {
-
+        DBManip.deleteData(AppAPI.NOTES, email, date + "/" + time, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                Log.v("NOTE_DELETEION", "position: " + time + " successful");
+                setResult(RESULT_OK, new Intent());
+                finish();
+            }
+        });
     }
 
     public class Loading extends AsyncTask<Void, Void, Void>
@@ -102,27 +121,27 @@ public class EditNoteActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            String date = getIntent().getStringExtra(Constants.DAY_DATE);
-            int position = getIntent().getIntExtra(Constants.RECYCLER_POSITION, 0);
-
             Note note = new Note();
             note.setDate(date);
+            note.setTimeCreated(time);
             note.setImportant(isImportant);
             note.setText(noteBody);
 
             if(newNote)
             {
-                DBManip.addData(AppAPI.NOTES, email, date + "/" + position, note, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        Log.v("NOTE_ADDED", "note added");
-                    }
-                });
+                if(!noteBody.isEmpty())
+                {
+                    DBManip.addData(AppAPI.NOTES, email, date + "/" + time, note, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            Log.v("NOTE_ADDED", "note added");
+                        }
+                    });
+                }
             }
             else
             {
-                DBManip.updateData(AppAPI.NOTES, email, date + "/" + position, note, new DatabaseReference.CompletionListener() {
+                DBManip.updateData(AppAPI.NOTES, email, date + "/" + time, note, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         Log.v("NOTE_ADDED", "note updated");

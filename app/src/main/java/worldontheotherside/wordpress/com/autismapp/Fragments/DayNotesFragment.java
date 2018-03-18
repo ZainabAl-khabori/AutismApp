@@ -16,7 +16,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import worldontheotherside.wordpress.com.autismapp.API.Note;
 import worldontheotherside.wordpress.com.autismapp.API.Notes;
@@ -64,6 +67,8 @@ public class DayNotesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerViewNotes.setLayoutManager(layoutManager);
 
+        String time = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date()).replace(':', '-');
+
         date = getArguments().getString(Constants.DAY_DATE);
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         email = email.replace('@', '_');
@@ -77,11 +82,12 @@ public class DayNotesFragment extends Fragment {
                 floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        String time = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                         Intent intent = new Intent(getContext(), EditNoteActivity.class);
                         intent.putExtra(Constants.DAY_DATE, date);
+                        intent.putExtra(Constants.TIME_CREATED, time);
                         intent.putExtra(Constants.NEW_NOTE, true);
-                        intent.putExtra(Constants.RECYCLER_POSITION, data.size());
-                        startActivity(intent);
+                        startActivityForResult(intent, Constants.DELETE_ACTION_REQ);
                     }
                 });
 
@@ -95,8 +101,8 @@ public class DayNotesFragment extends Fragment {
                         intent.putExtra(Constants.NEW_NOTE, false);
                         intent.putExtra(Constants.NOTE_BODY, data.get(position).getText());
                         intent.putExtra(Constants.IMPORTANT, data.get(position).isImportant());
-                        intent.putExtra(Constants.RECYCLER_POSITION, position);
-                        startActivity(intent);
+                        intent.putExtra(Constants.TIME_CREATED, data.get(position).getTimeCreated());
+                        startActivityForResult(intent, Constants.DELETE_ACTION_REQ);
                     }
                 });
             }

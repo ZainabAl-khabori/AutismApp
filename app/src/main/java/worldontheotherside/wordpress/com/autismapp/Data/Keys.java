@@ -25,6 +25,11 @@ public class Keys {
     public static final String CHILD_INFO = "child info";
     public static final String NOTES = "notes";
     public static final String EVENTS = "events";
+    public static final String EVENT = "event";
+    public static final String TIME = "time";
+    public static final String DATE = "date";
+    public static final String EVENT_DESCRIPTION = "event description";
+    public static final String RINGTONE = "ringtone";
 
     public static final String VERIFICATION_IN_PROGRESS = "verification in progress";
 

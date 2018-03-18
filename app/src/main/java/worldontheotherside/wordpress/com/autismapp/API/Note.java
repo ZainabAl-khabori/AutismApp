@@ -10,6 +10,7 @@ public class Note {
 
     private String text;
     private String date;
+    private String timeCreated;
     private boolean important;
 
     public Note()
@@ -25,6 +26,7 @@ public class Note {
 
             this.text = note.text;
             this.date = note.date;
+            this.timeCreated = note.timeCreated;
             this.important = note.important;
         }
     }
@@ -36,6 +38,10 @@ public class Note {
     public String getDate() { return date; }
 
     public void setDate(String date) { this.date = date; }
+
+    public String getTimeCreated() { return timeCreated; }
+
+    public void setTimeCreated(String timeCreated) { this.timeCreated = timeCreated; }
 
     public boolean isImportant() { return important; }
 

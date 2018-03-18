@@ -94,15 +94,25 @@ public class DBManip {
         db.setValue(data, completionListener);
     }
 
-    public static void deleteData(String url, Object data, DatabaseReference.CompletionListener completionListener)
+    public static void deleteData(String url, DatabaseReference.CompletionListener completionListener)
     {
         db = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
         db.setValue(null, completionListener);
     }
 
-    public static void deleteData(String url, String field, Object data, DatabaseReference.CompletionListener completionListener)
+    public static void deleteData(String url, String email, DatabaseReference.CompletionListener completionListener)
     {
-        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(field);
+        String path = email.replace('@', '_');
+        path = path.replace('.', '_');
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(path);
+        db.setValue(null, completionListener);
+    }
+
+    public static void deleteData(String url, String email, String field, DatabaseReference.CompletionListener completionListener)
+    {
+        String path = email.replace('@', '_');
+        path = path.replace('.', '_');
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(path).child(field);
         db.setValue(null, completionListener);
     }
 

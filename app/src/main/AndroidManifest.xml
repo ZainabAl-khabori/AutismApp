@@ -32,7 +32,19 @@
         </activity>
         <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.DayViewActivity" />
-        <activity android:name=".Activities.EditNoteActivity"></activity>
+        <activity android:name=".Activities.EditNoteActivity" />
+        <activity android:name=".Activities.InfoMainActivity">
+
+            <!--
+                <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity android:name=".Activities.InfoDetailsActivity" />
+        <activity android:name=".Activities.EditEventActivity"></activity>
     </application>
 
 </manifest>
