@@ -8,42 +8,42 @@ import java.io.Serializable;
 
 public class Info implements Serializable {
 
-    private String InfoTitle;
-    private String InfoDescription;
-    private String InfoPageURL;
-    private String InfoImageURL;
+    private String infoTitle;
+    private String infoDescription;
+    private String infoPageURL;
+    private String infoImageURL;
 
 
     public String getInfoTitle () {
-         return InfoTitle;
+         return infoTitle;
     }
 
     public void setInfoTitle (String infoTitle) {
-        InfoTitle = infoTitle;
+        this.infoTitle = infoTitle;
     }
 
     public String getInfoDescription () {
-        return InfoDescription;
+        return infoDescription;
     }
 
     public void setInfoDescription (String infoDescription) {
-        InfoDescription = infoDescription;
+        this.infoDescription = infoDescription;
     }
 
     public String getInfoPageURL () {
-        return InfoPageURL;
+        return infoPageURL;
     }
 
     public void setInfoPageURL (String infoPageURL) {
-        InfoPageURL = infoPageURL;
+        this.infoPageURL = infoPageURL;
     }
 
     public String getInfoImageURL () {
-        return InfoImageURL;
+        return infoImageURL;
     }
 
     public void setInfoImageURL (String infoImageURL) {
-        InfoImageURL = infoImageURL;
+        this.infoImageURL = infoImageURL;
     }
 
 
