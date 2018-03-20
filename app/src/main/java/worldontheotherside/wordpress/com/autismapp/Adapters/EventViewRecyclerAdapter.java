@@ -1,33 +1,51 @@
 package worldontheotherside.wordpress.com.autismapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ImageViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import worldontheotherside.wordpress.com.autismapp.API.Event;
 import worldontheotherside.wordpress.com.autismapp.API.EventDisplayItem;
+import worldontheotherside.wordpress.com.autismapp.Activities.EditEventActivity;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
+import worldontheotherside.wordpress.com.autismapp.Database.AppAPI;
+import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
+import worldontheotherside.wordpress.com.autismapp.Fragments.ProgressDialogFragment;
+import worldontheotherside.wordpress.com.autismapp.Fragments.TimePickerDialogFragment;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 /**
  * Created by زينب on 3/18/2018.
  */
 
-public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements EditEventActivity.OnTimeSelectedListener, EditEventActivity.OnRingtoneSelectedListener {
 
     private ArrayList<EventDisplayItem> items;
     private Event event;
@@ -35,6 +53,34 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private boolean newEvent;
 
     private final int FIELD = 0, BODY = 1;
+    private RecyclerView recyclerViewParent;
+    private String email;
+    private int ringtoneIndex;
+    private int timeIndex;
+
+    private Ringtone ringtone;
+
+    @Override
+    public void onTimeSelected(TimePicker view, int hr, int min) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hr);
+        calendar.set(Calendar.MINUTE, min);
+
+        String time = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(calendar.getTime());
+
+        FieldViewHolder holder = (FieldViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(timeIndex);
+        holder.getTextViewBody().setText(time);
+        event.setTime(time);
+    }
+
+    @Override
+    public void onRingtoneSelected(Ringtone ringtone, Uri uri) {
+        this.ringtone = ringtone;
+        FieldViewHolder holder = (FieldViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(ringtoneIndex);
+        holder.getTextViewBody().setText(ringtone.getTitle(context));
+        event.setRingtone(uri.toString());
+    }
 
     public class FieldViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
@@ -65,7 +111,100 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         @Override
         public void onClick(View view) {
+            if(view.getId() == imageViewEdit.getId())
+            {
+                BodyViewHolder holder;
+                if(items.get(getAdapterPosition()).getTitle().equals(Constants.EVENT))
+                {
+                    holder = (BodyViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(getAdapterPosition() + 1);
+                    if(!holder.getEditTextInfo().isEnabled())
+                    {
+                        imageViewEdit.setImageResource(R.drawable.ic_done);
+                        holder.getEditTextInfo().setEnabled(true);
+                        holder.getEditTextInfo().requestFocus();
+                    }
+                    else
+                    {
+                        imageViewEdit.setImageResource(R.drawable.ic_edit);
+                        holder.getEditTextInfo().setEnabled(false);
+                        event.setTitle(holder.getEditTextInfo().getText().toString());
+                    }
+                }
 
+                if(items.get(getAdapterPosition()).getTitle().equals(Constants.TIME))
+                {
+                    timeIndex = getAdapterPosition();
+
+                    AppCompatActivity activity = (AppCompatActivity)context;
+                    TimePickerDialogFragment timeDialog = new TimePickerDialogFragment();
+                    timeDialog.show(activity.getSupportFragmentManager(), "TIME_PICKER");
+                }
+
+                if(items.get(getAdapterPosition()).getTitle().equals(Constants.EVENT_DESCRIPTION))
+                {
+                    holder = (BodyViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(getAdapterPosition() + 1);
+                    if(!holder.getEditTextInfo().isEnabled())
+                    {
+                        imageViewEdit.setImageResource(R.drawable.ic_done);
+                        holder.getEditTextInfo().setEnabled(true);
+                        holder.getEditTextInfo().requestFocus();
+                    }
+                    else
+                    {
+                        imageViewEdit.setImageResource(R.drawable.ic_edit);
+                        holder.getEditTextInfo().setEnabled(false);
+                        event.setDescription(holder.getEditTextInfo().getText().toString());
+                    }
+                }
+
+                if(items.get(getAdapterPosition()).getTitle().equals(Constants.RINGTONE))
+                {
+                    if(ringtone != null && ringtone.isPlaying())
+                        ringtone.stop();
+
+                    ringtoneIndex = getAdapterPosition();
+
+                    AppCompatActivity activity = (AppCompatActivity) context;
+                    Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                    activity.startActivityForResult(intent, Constants.RQS_RINGTONE_PICKER);
+                }
+            }
+
+            if(view.getId() == imageViewAction.getId())
+            {
+                if(items.get(getAdapterPosition()).getTitle().equals(Constants.EVENT))
+                {
+                    final AppCompatActivity activity = (AppCompatActivity) context;
+                    DBManip.deleteData(AppAPI.EVENTS, email, event.getDate() + "/" + event.getTime(), new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            Log.v("NOTE_DELETION", "position: " + event.getTime() + " successful");
+                            activity.setResult(activity.RESULT_OK, new Intent());
+                            activity.finish();
+                        }
+                    });
+                }
+
+                if(items.get(getAdapterPosition()).getTitle().equals(Constants.RINGTONE))
+                {
+                    if(ringtone != null && !ringtone.isPlaying())
+                    {
+                        imageViewAction.setImageResource(R.drawable.ic_pause);
+                        ImageViewCompat.setImageTintList(imageViewAction,
+                                ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_light)));
+                        ringtone.play();
+                    }
+                    else
+                    {
+                        imageViewAction.setImageResource(R.drawable.ic_play);
+                        ImageViewCompat.setImageTintList(imageViewAction,
+                                ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorPrimaryDark)));
+                        ringtone.stop();
+                    }
+                }
+            }
+
+            new Saving().execute();
         }
     }
 
@@ -96,6 +235,9 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         View view;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+
+        recyclerViewParent = (RecyclerView) parent;
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
         switch(viewType)
         {
@@ -128,7 +270,8 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     {
                         fieldViewHolder.getTextViewField()
                                 .setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_time_green, 0, 0, 0);
-                        fieldViewHolder.getTextViewBody().setText(event.getTime());
+                        if(event.getTime() != null)
+                            fieldViewHolder.getTextViewBody().setText(event.getTime());
                     }
                     else if(items.get(position).getTitle().equals(Constants.DATE))
                     {
@@ -155,9 +298,11 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     fieldViewHolder.getImageViewAction().setImageResource(R.drawable.ic_play);
                     ImageViewCompat.setImageTintList(fieldViewHolder.getImageViewAction(),
                             ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorPrimaryDark)));
-                    Ringtone ringtone = RingtoneManager.getRingtone(context, Uri.parse(event.getRingtone()));
-                    fieldViewHolder.getTextViewBody().setText(ringtone.getTitle(context));
-                    // Some coding to bring ringtone
+                    if(event.getRingtone() != null)
+                    {
+                        ringtone = RingtoneManager.getRingtone(context, Uri.parse(event.getRingtone()));
+                        fieldViewHolder.getTextViewBody().setText(ringtone.getTitle(context));
+                    }
                 }
 
                 break;
@@ -179,4 +324,32 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemCount() { return items.size(); }
+
+    public class Saving extends AsyncTask<Void, Void, Void>
+    {
+        private ProgressDialogFragment progressDialogFragment;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            AppCompatActivity activity = (AppCompatActivity) context;
+
+            progressDialogFragment = ProgressDialogFragment.newProgressDialogFragment(Constants.WAIT_MESSAGE);
+            progressDialogFragment.show(activity.getSupportFragmentManager(), "PROGRESS_DIALOG");
+            progressDialogFragment.setCancelable(false);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            progressDialogFragment.dismiss();
+        }
+    }
 }

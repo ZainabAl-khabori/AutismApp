@@ -394,16 +394,18 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
 
         private void createAccount()
         {
-            auth.createUserWithEmailAndPassword(personalInfo.get(Constants.EMAIL), personalInfo.get(Constants.PASSWORD))
+            final String email = personalInfo.get(Constants.EMAIL);
+            final String password = personalInfo.get(Constants.PASSWORD);
+            auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(Task<AuthResult> task) {
                             if(task.isSuccessful())
                             {
                                 DBManip.updateUserProfile(auth.getCurrentUser(), personalInfo,
-                                        (AppCompatActivity)getActivity(), new OnCompleteListener() {
+                                        (AppCompatActivity) getActivity(), new DatabaseReference.CompletionListener() {
                                             @Override
-                                            public void onComplete(Task task) {
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                 createChildProfile();
                                             }
                                         });

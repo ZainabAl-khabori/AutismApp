@@ -67,8 +67,6 @@ public class DayNotesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerViewNotes.setLayoutManager(layoutManager);
 
-        String time = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date()).replace(':', '-');
-
         date = getArguments().getString(Constants.DAY_DATE);
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         email = email.replace('@', '_');

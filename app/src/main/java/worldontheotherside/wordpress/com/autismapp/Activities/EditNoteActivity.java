@@ -98,7 +98,7 @@ public class EditNoteActivity extends AppCompatActivity {
         DBManip.deleteData(AppAPI.NOTES, email, date + "/" + time, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                Log.v("NOTE_DELETEION", "position: " + time + " successful");
+                Log.v("NOTE_DELETION", "position: " + time + " successful");
                 setResult(RESULT_OK, new Intent());
                 finish();
             }

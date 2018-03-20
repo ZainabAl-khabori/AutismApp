@@ -54,7 +54,7 @@
         android:layout_height="0dp"
         android:layout_margin="5dp"
         android:layout_weight="1"
-        android:background="@drawable/border"
+        android:background="@drawable/border_color_primary_thick"
         android:ems="10"
         android:enabled="false"
         android:gravity="top"

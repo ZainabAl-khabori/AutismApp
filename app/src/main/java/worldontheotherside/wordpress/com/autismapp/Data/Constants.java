@@ -35,6 +35,12 @@ public class Constants {
     public static final String TIME = SplashScreenActivity.STRING_CONSTANTS.get(Keys.TIME);
     public static final String EVENT_DESCRIPTION = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EVENT_DESCRIPTION);
     public static final String RINGTONE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.RINGTONE);
+    public static final String PROFILE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.PROFILE);
+    public static final String CHILD_PROFILE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.CHILD_PROFILE);
+    public static final String KNOWLEDGE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.KNOWLEDGE);
+    public static final String FORUM = SplashScreenActivity.STRING_CONSTANTS.get(Keys.FORUM);
+    public static final String CONTACT = SplashScreenActivity.STRING_CONSTANTS.get(Keys.CONTACT);
+    public static final String WAIT_MESSAGE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.WAIT_MESSAGE);
 
     public static final String DP = "dp";
     public static final String EMPTY_FIELD_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EMPTY_FIELD_ERROR);
@@ -57,4 +63,9 @@ public class Constants {
 
     public static final String EVENT_TITLE = "event title";
     public static final String EVENT_INFO = "event info";
+
+    public static final int RQS_RINGTONE_PICKER = 1;
+
+    public static final int DRAWER_HEADER = 0;
+    public static final int DRAWER_ITEM = 1;
 }
