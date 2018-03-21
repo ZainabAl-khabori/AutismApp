@@ -10,6 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class AppAPI {
     private static DatabaseReference db = FirebaseDatabase.getInstance().getReference();
 
+    public static String USERS = db.child("users").toString();
     public static String NOTES = db.child("notes").toString();
     public static String CHILDREN = db.child("children").toString();
     public static String EVENTS = db.child("events").toString();

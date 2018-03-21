@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import worldontheotherside.wordpress.com.autismapp.API.User;
 import worldontheotherside.wordpress.com.autismapp.Activities.MainActivity;
 import worldontheotherside.wordpress.com.autismapp.Activities.SignUpActivity;
 import worldontheotherside.wordpress.com.autismapp.Activities.StartupActivity;
@@ -47,9 +48,12 @@ public class DBManip {
         db.addValueEventListener(valueEventListener);
     }
 
-    public static void getData(String url, String child, ValueEventListener valueEventListener)
+    public static void getData(String url, String email, ValueEventListener valueEventListener)
     {
-        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(child);
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        String path = email.replace('@', '_');
+        path = path.replace('.', '_');
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(path);
         db.addValueEventListener(valueEventListener);
     }
 
@@ -125,17 +129,18 @@ public class DBManip {
     public interface OnExitListener { void onExit(boolean done); }
 
     private static boolean verificationInProgress = false;
+    private static boolean smsSent = false;
 
     public static void updateUserProfile(final FirebaseUser user, final HashMap<String, String> data,
-                                         final AppCompatActivity activity, OnCompleteListener onCompleteListener)
+                                         final AppCompatActivity activity, DatabaseReference.CompletionListener completionListener)
     {
-        UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
+        User newUser = User.getUser();
 
         if(data.containsKey(Constants.USERNAME))
-            builder.setDisplayName(data.get(Constants.USERNAME));
+            newUser.setUsername(data.get(Constants.USERNAME));
 
         if(data.containsKey(Constants.DP))
-            builder.setPhotoUri(Uri.parse(data.get(Constants.DP)));
+            newUser.setDpUri(data.get(Constants.DP));
 
         if(data.containsKey(Constants.EMAIL))
             user.updateEmail(data.get(Constants.EMAIL));
@@ -162,6 +167,7 @@ public class DBManip {
                         @Override
                         public void onVerify(EditText editTextCode) {
                             Log.v("VERIFY_LISTENER", "verify button clicked");
+                            smsSent = true;
                             code = editTextCode.getText().toString();
                             if(editTextCode.getText().toString().isEmpty())
                                 editTextCode.setError(Constants.EMPTY_FIELD_ERROR);
@@ -210,10 +216,14 @@ public class DBManip {
                                 user.linkWithCredential(e.getUpdatedCredential());
 
                             onExitListener.onExit(true);
-                            Intent intent = new Intent(activity, MainActivity.class);
-                            activity.startActivity(intent);
-                            activity.finish();
-                            StartupActivity.startupActivity.finish();
+                            if(!smsSent)
+                            {
+                                Log.v("SMS_SENT", ""+smsSent);
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                activity.startActivity(intent);
+                                activity.finish();
+                                StartupActivity.startupActivity.finish();
+                            }
                         }
                     });
                 }
@@ -233,8 +243,6 @@ public class DBManip {
             verificationInProgress = true;
             onDoneVerificationListener.notifyActivity(callbacks, verificationInProgress, data.get(Constants.PHONE));
         }
-
-        UserProfileChangeRequest request = builder.build();
-        user.updateProfile(request).addOnCompleteListener(onCompleteListener);
+        DBManip.addData(AppAPI.USERS, user.getEmail(), newUser, completionListener);
     }
 }

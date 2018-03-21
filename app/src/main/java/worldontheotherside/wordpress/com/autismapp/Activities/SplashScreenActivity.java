@@ -71,6 +71,12 @@ public class SplashScreenActivity extends AppCompatActivity {
             STRING_CONSTANTS.put(Keys.TIME, getString(R.string.time));
             STRING_CONSTANTS.put(Keys.EVENT_DESCRIPTION, getString(R.string.event_description));
             STRING_CONSTANTS.put(Keys.RINGTONE, getString(R.string.ringtone));
+            STRING_CONSTANTS.put(Keys.PROFILE, getString(R.string.my_profile));
+            STRING_CONSTANTS.put(Keys.CHILD_PROFILE, getString(R.string.my_child_s_profile));
+            STRING_CONSTANTS.put(Keys.KNOWLEDGE, getString(R.string.knowledge_base));
+            STRING_CONSTANTS.put(Keys.FORUM, getString(R.string.forum));
+            STRING_CONSTANTS.put(Keys.CONTACT, getString(R.string.contact));
+            STRING_CONSTANTS.put(Keys.WAIT_MESSAGE, getString(R.string.please_wait_a_moment));
 
             return null;
         }

@@ -7,11 +7,10 @@
         android:id="@+id/editTextInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border"
+        android:background="@drawable/border_color_primary_thick"
         android:ellipsize="end"
         android:ems="10"
         android:gravity="top"
         android:inputType="text"
-        android:text="hhhhg"
         android:textColor="@android:color/black" />
 </LinearLayout>

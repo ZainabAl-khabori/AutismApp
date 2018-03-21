@@ -30,6 +30,12 @@ public class Keys {
     public static final String DATE = "date";
     public static final String EVENT_DESCRIPTION = "event description";
     public static final String RINGTONE = "ringtone";
+    public static final String PROFILE = "profile";
+    public static final String CHILD_PROFILE = "child profile";
+    public static final String KNOWLEDGE = "knowledge";
+    public static final String FORUM = "forum";
+    public static final String CONTACT = "contact";
+    public static final String WAIT_MESSAGE = "wait message";
 
     public static final String VERIFICATION_IN_PROGRESS = "verification in progress";
 

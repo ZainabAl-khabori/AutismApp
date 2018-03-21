@@ -1,40 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:id="@+id/drawerLayoutDrawer"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
     tools:context="worldontheotherside.wordpress.com.autismapp.Activities.MainActivity">
 
-    <com.applandeo.materialcalendarview.CalendarView
-        android:id="@+id/calendarViewCalendar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:abbreviationsBarColor="@color/colorAccent"
-        app:abbreviationsLabelsColor="@color/colorPrimaryDark"
-        app:anotherMonthsDaysLabelsColor="@color/colorPrimary"
-        app:daysLabelsColor="@color/colorPrimaryDark"
-        app:forwardButtonSrc="@drawable/ic_right"
-        app:headerColor="@color/colorPrimaryDark"
-        app:headerLabelColor="@color/colorPrimary"
-        app:previousButtonSrc="@drawable/ic_left"
-        app:selectionColor="@color/colorAccent"
-        app:selectionLabelColor="@color/colorPrimaryDark"
-        app:todayLabelColor="@color/colorAccent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recyclerViewNotes"
-        android:layout_weight="1"/>
+        <include
+            android:id="@+id/toolbarDrawer"
+            layout="@layout/toolbar"/>
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Signout"
-        android:textSize="20dp"
-        android:onClick="signoutAction"/>
-</LinearLayout>
+        <com.applandeo.materialcalendarview.CalendarView
+            android:id="@+id/calendarViewCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/border_color_primary_dark_thin"
+            app:abbreviationsBarColor="@color/textColorPrimaryLight"
+            app:abbreviationsLabelsColor="@color/colorPrimaryDark"
+            app:anotherMonthsDaysLabelsColor="@color/colorPrimary"
+            app:daysLabelsColor="@color/colorAccent"
+            app:forwardButtonSrc="@drawable/ic_right"
+            app:headerColor="@color/colorPrimary"
+            app:headerLabelColor="@color/colorAccentLight"
+            app:pagesColor="@color/colorAccentLight"
+            app:previousButtonSrc="@drawable/ic_left"
+            app:selectionColor="@color/colorAccent"
+            app:selectionLabelColor="@color/colorPrimaryDark"
+            app:todayLabelColor="@color/colorAccentDark" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyclerViewNotes"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Signout"
+            android:textSize="20dp"
+            android:onClick="signoutAction"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recyclerViewDrawer"/>
+    </FrameLayout>
+</android.support.v4.widget.DrawerLayout>
