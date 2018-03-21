@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 public class Article implements Serializable {
 
+    private String articleId;
     private String articleTitle;
     private String articleContent;
     private String articleDetails;
@@ -61,5 +62,13 @@ public class Article implements Serializable {
 
     public void setArticleWriterImageURL (String articleWriterImageURL) {
         this.articleWriterImageURL = articleWriterImageURL;
+    }
+
+    public String getArticleId () {
+        return articleId;
+    }
+
+    public void setArticleId (String articleId) {
+        this.articleId = articleId;
     }
 }
