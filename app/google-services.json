@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "768559900823",
-    "firebase_url": "https://test-autsim.firebaseio.com",
-    "project_id": "test-autsim",
-    "storage_bucket": "test-autsim.appspot.com"
+    "project_number": "474244546314",
+    "firebase_url": "https://autismapp-b0b6a.firebaseio.com",
+    "project_id": "autismapp-b0b6a",
+    "storage_bucket": "autismapp-b0b6a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:768559900823:android:aac3b94ea4855c52",
+        "mobilesdk_app_id": "1:474244546314:android:aac3b94ea4855c52",
         "android_client_info": {
           "package_name": "worldontheotherside.wordpress.com.autismapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "768559900823-hopgcs27v1ntvg8t2slpafekcmri4dqt.apps.googleusercontent.com",
+          "client_id": "474244546314-ha5n3dhr0ht0b09rvu0c51a470dtcdil.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "worldontheotherside.wordpress.com.autismapp",
-            "certificate_hash": "d83ca662cea3e4dbdf94333698f649619a16624e"
+            "certificate_hash": "6dbd10bc5e090fe7592529ee2a297864d5def8d2"
           }
         },
         {
-          "client_id": "768559900823-3fhrqukbeps85d5044n2oue4q5t1h0ld.apps.googleusercontent.com",
+          "client_id": "474244546314-shkrimi225u9ls9bffsg4p6p4eroe66j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAfmqY9A7IoEwjONqrz7L4P9XROGzVZ1zY"
+          "current_key": "AIzaSyC2h5h51ACWidFDP7yBwB7WdRDh2UcKr5k"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "768559900823-3fhrqukbeps85d5044n2oue4q5t1h0ld.apps.googleusercontent.com",
+              "client_id": "474244546314-shkrimi225u9ls9bffsg4p6p4eroe66j.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

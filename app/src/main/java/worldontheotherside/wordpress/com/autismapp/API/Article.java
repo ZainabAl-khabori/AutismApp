@@ -1,4 +1,4 @@
-package worldontheotherside.wordpress.com.autismapp.Activities;
+package worldontheotherside.wordpress.com.autismapp.API;
 
 import java.io.Serializable;
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import worldontheotherside.wordpress.com.autismapp.API.Article;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class ArticleDetailsActivity extends AppCompatActivity {

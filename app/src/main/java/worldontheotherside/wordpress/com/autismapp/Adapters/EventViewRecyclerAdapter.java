@@ -3,6 +3,7 @@ package worldontheotherside.wordpress.com.autismapp.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -204,7 +205,13 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 }
             }
 
-            new Saving().execute();
+            if(imageViewEdit.getDrawable() == ContextCompat.getDrawable(context, R.drawable.ic_done))
+            {
+                FieldViewHolder timeHolder = (FieldViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(timeIndex);
+                timeHolder.getTextViewField().setTextColor(Color.RED);
+            }
+
+            //new Saving().execute();
         }
     }
 
@@ -268,6 +275,8 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 {
                     if(items.get(position).getTitle().equals(Constants.TIME))
                     {
+                        timeIndex = position;
+
                         fieldViewHolder.getTextViewField()
                                 .setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_time_green, 0, 0, 0);
                         if(event.getTime() != null)
