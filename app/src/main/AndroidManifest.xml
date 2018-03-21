@@ -45,9 +45,7 @@
         </activity>
         <activity android:name=".Activities.InfoDetailsActivity" />
         <activity android:name=".Activities.EditEventActivity"></activity>
-        <activity android:name=".Activities.SignUpActivity" />
-        <activity android:name=".Activities.InfoMainActivity" />
-        <activity android:name=".Activities.InfoDetailsActivity" />
+
         <activity
             android:name=".Activities.ArticleMainActivity"
             android:label="@string/title_activity_artical_main"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -55,5 +56,130 @@
         android:text="By  Jack,  18-3-2018 "
         android:textColor="@color/textColorSecondary"
         android:textSize="16dp" />
+
+    <ImageView
+        android:id="@+id/iv_article_writer_image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tv_article_details"
+        android:layout_margin="12dp"
+        android:background="@color/colorAccent"
+        android:contentDescription="Article Writer image" />
+
+    <TextView
+        android:id="@+id/tv_article_writer_name"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/iv_article_writer_image"
+        android:layout_marginEnd="12dp"
+        android:text="Autism App" />
+
+    <ScrollView
+        android:id="@+id/scrollView_content"
+        android:layout_width="match_parent"
+        android:layout_height="215dp"
+        android:layout_below="@+id/tv_article_details"
+        android:layout_centerInParent="true"
+        android:layout_toStartOf="@id/iv_article_writer_image">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:id="@+id/iv_article_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@color/colorAccent"
+                android:src="@drawable/face" />
+
+            <TextView
+                android:id="@+id/tv_article_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/iv_article_image"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
+                android:text="addf.f
+
+
+
+
+                m.smfsmf
+
+
+                .sefes.,fe.s
+
+
+                mf.esmf.esfesfmsf
+efsefsfs
+
+
+
+
+fefffsfs fes f sef s f s fs f e fs ef s
+f
+ sf dnawdlnw
+ andla'
+ dlkawjd
+ l adja dakd'
+
+  kjaw da dkawd wa, kjnejkf kbf s fskf  dj dh asdad ajd ad ad ajd ajd awdhwdhawdawdkawdjawdadlwjwldjadjalwjdalwdjadjwlajdmalkdwajdiowaljdwlajdwaldka da,nda dajddnadljnad
+   aada dadajdadakdad adada ldoa da dad ajdwadnajwdhad adjawndjalwijidlawd awd ,ad awdalwd awdaw daw dawd awdnliawjdjlajwdlawjdawd
+   ada;dnkawdjad
+   adpawdoawdoawidjawojdawojdawojdawd
+   adaw
+   dowajdadjwadjadoawjdoajdwoad
+   wad
+   wad
+   adoadadjwajdowad
+   wadwad
+   owadw
+   ada
+   dwa
+   da
+   dwada dkawdnandawn
+  dkandkandnawndakndakndwandknwa
+  dknwajndkjandwdawdad
+ f" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <ListView
+        android:id="@+id/lv_comments_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_comment"
+        android:layout_below="@+id/scrollView_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/et_comment"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toStartOf="@+id/iv_add_comment"
+        android:background="@android:color/white"
+        android:hint="add comment"
+        android:visibility="gone" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/iv_add_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
 
 </RelativeLayout>
