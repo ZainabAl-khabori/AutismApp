@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class ArticleDetailsActivity extends AppCompatActivity {
@@ -15,6 +18,11 @@ public class ArticleDetailsActivity extends AppCompatActivity {
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.article_details_activity);
+
+
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance ();
+        final DatabaseReference myRef = database.getReference ("articlesList");
 
         TextView tvToolbarTitle = findViewById (R.id.tv_search_title);
 
@@ -28,6 +36,17 @@ public class ArticleDetailsActivity extends AppCompatActivity {
                         .setAction ("Action", null).show ();*/
                 if (etComment.getVisibility () == View.GONE) {
                     etComment.setVisibility (View.VISIBLE);
+                } else {
+                    Article newComment = new Article ();
+
+                    newComment.setArticleId ("wa");
+                    newComment.setArticleContent ("this this something comment");
+                    newComment.setArticleDetails ("Test created on 21-3-2018");
+                    newComment.setArticleWriterName ("Someone");
+                    newComment.setArticleWriterImageURL ("http://slklibrary.xyz/apis/images/LOGO_purchea.png");
+
+                    myRef.child ("A1").child ("commentsList").child (newComment.getArticleId ()).setValue (newComment);
+
                 }
             }
         });
