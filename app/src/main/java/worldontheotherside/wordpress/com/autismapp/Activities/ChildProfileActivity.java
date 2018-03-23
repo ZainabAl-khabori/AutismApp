@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,12 +24,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import worldontheotherside.wordpress.com.autismapp.API.Child;
 import worldontheotherside.wordpress.com.autismapp.API.CircularDrawable;
-import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Database.AppAPI;
 import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.R;
@@ -42,12 +41,12 @@ public class ChildProfileActivity extends AppCompatActivity {
     private ImageView imageViewEdit;
     private EditText editTextName;
     private EditText editTextAge;
+    private TextView textViewChildProfile;
     private TextView textViewGender;
     private TextView textViewScore;
 
     private FirebaseUser user;
-    private boolean dpChanged = false;
-    private Uri uri;
+    private Child newChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +58,12 @@ public class ChildProfileActivity extends AppCompatActivity {
         imageViewEdit = (ImageView) findViewById(R.id.imageViewEdit);
         editTextAge = (EditText) findViewById(R.id.editTextAge);
         editTextName = (EditText) findViewById(R.id.editTextChildName);
+        textViewChildProfile = (TextView) findViewById(R.id.textViewChildProfile);
         textViewGender = (TextView) findViewById(R.id.textViewGender);
         textViewScore = (TextView) findViewById(R.id.textViewScore);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+        newChild = new Child();
 
         DBManip.getData(AppAPI.CHILDREN, user.getEmail(), new ValueEventListener() {
             @Override
@@ -90,6 +91,9 @@ public class ChildProfileActivity extends AppCompatActivity {
 
                 Picasso.get().load(child.getPhoto()).into(target);
 
+                String profile = getString(R.string.profile_of) + child.getName();
+
+                textViewChildProfile.setText(profile);
                 editTextAge.setText(String.valueOf(child.getAge()));
                 editTextName.setText(child.getName());
                 textViewGender.setText(child.getGender());
@@ -115,8 +119,27 @@ public class ChildProfileActivity extends AppCompatActivity {
 
         if(resultCode == RESULT_OK && requestCode == 0)
         {
-            Picasso.get().load(data.getData()).into(imageViewDp);
-            uri = data.getData();
+            Target target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    CircularDrawable drawable = new CircularDrawable(bitmap);
+                    imageViewDp.setImageResource(android.R.color.transparent);
+                    imageViewDp.setBackground(drawable);
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                    Log.v("BITMAP_FAILED", e.getMessage());
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            };
+
+            Picasso.get().load(data.getData()).into(target);
+            newChild.setPhoto(data.getData().toString());
         }
     }
 
@@ -127,7 +150,7 @@ public class ChildProfileActivity extends AppCompatActivity {
             imageViewEditDp.setVisibility(View.VISIBLE);
             imageViewEdit.setImageResource(R.drawable.ic_done);
             editTextName.setEnabled(true);
-            editTextName.setEnabled(true);
+            editTextAge.setEnabled(true);
             editTextName.requestFocus();
             editTextAge.setImeOptions(EditorInfo.IME_ACTION_DONE);
         }
@@ -138,20 +161,26 @@ public class ChildProfileActivity extends AppCompatActivity {
             editTextAge.setEnabled(false);
             editTextName.setEnabled(false);
 
-            final Child child = new Child();
+            newChild.setAge(Integer.valueOf(editTextAge.getText().toString()));
+            newChild.setName(editTextName.getText().toString());
+            newChild.setGender(textViewGender.getText().toString());
+            newChild.setAutismSpectrumScore(Integer.valueOf(textViewScore.getText().toString()));
 
-            if(dpChanged)
+            Log.v("CHILD_DATA", new Gson().toJson(newChild));
+
+            if(newChild.getPhoto() != null)
             {
                 FirebaseStorage storage = FirebaseStorage.getInstance();
+                Uri uri = Uri.parse(newChild.getPhoto());
 
                 storage.getReference().child("dp/" + uri.getLastPathSegment()).putFile(uri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                child.setPhoto(taskSnapshot.getDownloadUrl().toString());
-                                Log.v("DP_DOWNLOAD_A", child.getPhoto());
+                                newChild.setPhoto(taskSnapshot.getDownloadUrl().toString());
+                                Log.v("DP_DOWNLOAD_A", newChild.getPhoto());
 
-                                DBManip.updateData(AppAPI.CHILDREN, user.getEmail(), child,
+                                DBManip.updateDataWithEmail(AppAPI.CHILDREN, user.getEmail(), newChild,
                                         new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -174,7 +203,7 @@ public class ChildProfileActivity extends AppCompatActivity {
             {
                 Log.v("DP_DOWNLOAD_B", "no dp in user");
 
-                DBManip.updateData(AppAPI.CHILDREN, user.getEmail(), child,
+                DBManip.updateDataWithEmail(AppAPI.CHILDREN, user.getEmail(), newChild,
                         new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

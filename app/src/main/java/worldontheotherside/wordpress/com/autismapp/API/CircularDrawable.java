@@ -21,7 +21,8 @@ public class CircularDrawable extends Drawable {
     private Paint paint;
 
     public CircularDrawable(Bitmap bitmap) {
-        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 450, 450, true);
+        BitmapShader shader = new BitmapShader(scaledBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setShader(shader);
@@ -29,16 +30,12 @@ public class CircularDrawable extends Drawable {
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        int height = getBounds().height();
-        int width = getBounds().width();
+        //int height = getBounds().height();
+        //int width = getBounds().width();
 
-        float radius;
-        if(height <= width)
-            radius = (float)height / 2;
-        else
-            radius = (float)width / 2;
+        float radius = 400 / 2;
 
-        canvas.drawCircle((float)width/2, (float)height/2, radius, paint);
+        canvas.drawCircle((float)450/2, (float)450/2, radius, paint);
     }
 
     @Override

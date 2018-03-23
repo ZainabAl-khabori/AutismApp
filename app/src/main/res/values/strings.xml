@@ -85,5 +85,6 @@
     <string name="child_age">My child\'s age:</string>
     <string name="child_gender">Gender:</string>
     <string name="spectrum_score">Autism spectrum score:</string>
+    <string name="profile_of">Profile of</string>
 
 </resources>

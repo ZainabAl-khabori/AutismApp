@@ -94,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 Picasso.get().load(userData.getDpUri()).into(target);
 
-                String profile = userData.getUsername() + "'s profile";
+                String profile = getString(R.string.profile_of) + userData.getUsername();
                 textViewUserProfile.setText(profile);
                 textViewEmail.setText(firebaseUser.getEmail());
                 textViewPhone.setText(firebaseUser.getPhoneNumber());
