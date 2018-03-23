@@ -14,6 +14,11 @@ import android.widget.ImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.gson.Gson;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import worldontheotherside.wordpress.com.autismapp.API.Note;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
@@ -36,6 +41,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     private String email;
     private String date;
+    private String calendarJSON;
     private String time;
     private String noteBody;
     private boolean isImportant;
@@ -43,6 +49,8 @@ public class EditNoteActivity extends AppCompatActivity {
     private boolean sensory;
     private boolean academic;
     private boolean behavioral;
+
+    private String month;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +70,11 @@ public class EditNoteActivity extends AppCompatActivity {
         newNote = getIntent().getBooleanExtra(Constants.NEW_NOTE, false);
         email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         date = getIntent().getStringExtra(Constants.DAY_DATE);
+        calendarJSON = getIntent().getStringExtra(Constants.CALENDAR);
         time = getIntent().getStringExtra(Constants.TIME_CREATED);
+
+        Date date = new Gson().fromJson(calendarJSON, Date.class);
+        month = new SimpleDateFormat("MMMM", Locale.getDefault()).format(date);
 
         if(newNote)
         {
@@ -123,7 +135,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     public void deleteAction(View view)
     {
-        DBManip.deleteData(AppAPI.NOTES, email, date + "/" + time, new DatabaseReference.CompletionListener() {
+        DBManip.deleteData(AppAPI.NOTES, email, month + "/" + date + "/" + time, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 Log.v("NOTE_DELETION", "position: " + time + " successful");
@@ -163,7 +175,8 @@ public class EditNoteActivity extends AppCompatActivity {
             {
                 if(!noteBody.isEmpty())
                 {
-                    DBManip.addData(AppAPI.NOTES, email, date + "/" + time, note, new DatabaseReference.CompletionListener() {
+                    DBManip.addData(AppAPI.NOTES, email, month + "/" + date + "/" + time, note,
+                            new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             Log.v("NOTE_ADDED", "note added");
@@ -173,7 +186,8 @@ public class EditNoteActivity extends AppCompatActivity {
             }
             else
             {
-                DBManip.updateData(AppAPI.NOTES, email, date + "/" + time, note, new DatabaseReference.CompletionListener() {
+                DBManip.updateData(AppAPI.NOTES, email, month + "/" + date + "/" + time, note,
+                        new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         Log.v("NOTE_ADDED", "note updated");

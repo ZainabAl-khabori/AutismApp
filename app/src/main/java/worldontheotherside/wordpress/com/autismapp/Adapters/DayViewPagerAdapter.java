@@ -23,7 +23,7 @@ public class DayViewPagerAdapter extends FragmentPagerAdapter {
     public DayViewPagerAdapter(FragmentManager fm, String date, String calendar) {
         super(fm);
 
-        dayNotesFragment = DayNotesFragment.newInstance(date);
+        dayNotesFragment = DayNotesFragment.newInstance(date, calendar);
         eventsFragment = EventsFragment.newInstance(date, calendar);
     }
 

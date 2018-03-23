@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,12 +43,14 @@ public class DayNotesFragment extends Fragment {
     private ArrayList<Note> data;
 
     private String date;
+    String calendarJSON;
 
-    public static DayNotesFragment newInstance(String date)
+    public static DayNotesFragment newInstance(String date, String calendar)
     {
         DayNotesFragment dayNotesFragment = new DayNotesFragment();
         Bundle args = new Bundle();
         args.putString(Constants.DAY_DATE, date);
+        args.putString(Constants.CALENDAR, calendar);
         dayNotesFragment.setArguments(args);
         return dayNotesFragment;
     }
@@ -68,10 +71,15 @@ public class DayNotesFragment extends Fragment {
         recyclerViewNotes.setLayoutManager(layoutManager);
 
         date = getArguments().getString(Constants.DAY_DATE);
+        calendarJSON = getArguments().getString(Constants.CALENDAR);
+
+        Date calendar = new Gson().fromJson(calendarJSON, Date.class);
+        String month = new SimpleDateFormat("MMMM", Locale.getDefault()).format(calendar);
+
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         email = email.replace('@', '_');
         email = email.replace('.', '_');
-        DBManip.getData(AppAPI.NOTES, email + "/" + date, new ValueEventListener() {
+        DBManip.getData(AppAPI.NOTES, email + "/" + month + "/" + date, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Notes notes = new Notes(dataSnapshot);
@@ -85,6 +93,7 @@ public class DayNotesFragment extends Fragment {
                         intent.putExtra(Constants.DAY_DATE, date);
                         intent.putExtra(Constants.TIME_CREATED, time);
                         intent.putExtra(Constants.NEW_NOTE, true);
+                        intent.putExtra(Constants.CALENDAR, calendarJSON);
                         startActivityForResult(intent, Constants.DELETE_ACTION_REQ);
                     }
                 });
@@ -96,6 +105,7 @@ public class DayNotesFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getContext(), EditNoteActivity.class);
                         intent.putExtra(Constants.DAY_DATE, date);
+                        intent.putExtra(Constants.CALENDAR, calendarJSON);
                         intent.putExtra(Constants.NEW_NOTE, false);
                         intent.putExtra(Constants.NOTE_BODY, data.get(position).getText());
                         intent.putExtra(Constants.IMPORTANT, data.get(position).isImportant());
