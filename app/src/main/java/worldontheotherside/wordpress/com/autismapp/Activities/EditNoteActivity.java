@@ -15,10 +15,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import worldontheotherside.wordpress.com.autismapp.API.Note;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Database.AppAPI;
@@ -30,6 +26,10 @@ public class EditNoteActivity extends AppCompatActivity {
 
     private ImageView imageViewAction;
     private CheckBox checkBoxImportant;
+    private CheckBox checkBoxFunctional;
+    private CheckBox checkBoxSensory;
+    private CheckBox checkBoxAcademic;
+    private CheckBox checkBoxBehavioral;
     private EditText editTextNote;
 
     private boolean newNote;
@@ -39,6 +39,10 @@ public class EditNoteActivity extends AppCompatActivity {
     private String time;
     private String noteBody;
     private boolean isImportant;
+    private boolean functional;
+    private boolean sensory;
+    private boolean academic;
+    private boolean behavioral;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,10 @@ public class EditNoteActivity extends AppCompatActivity {
 
         imageViewAction = (ImageView) findViewById(R.id.imageViewAction);
         checkBoxImportant = (CheckBox) findViewById(R.id.checkBoxImportant);
+        checkBoxFunctional = (CheckBox) findViewById(R.id.checkBoxFunctionalSkills);
+        checkBoxSensory = (CheckBox) findViewById(R.id.checkBoxSensorySkills);
+        checkBoxAcademic = (CheckBox) findViewById(R.id.checkBoxAcademicSkills);
+        checkBoxBehavioral = (CheckBox) findViewById(R.id.checkBoxBehavioralSkills);
         editTextNote = (EditText) findViewById(R.id.editTextNote);
 
         editTextNote.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -61,6 +69,10 @@ public class EditNoteActivity extends AppCompatActivity {
             imageViewAction.setImageResource(R.drawable.ic_done);
             editTextNote.setEnabled(true);
             checkBoxImportant.setEnabled(true);
+            checkBoxFunctional.setEnabled(true);
+            checkBoxAcademic.setEnabled(true);
+            checkBoxSensory.setEnabled(true);
+            checkBoxBehavioral.setEnabled(true);
             editTextNote.requestFocus();
         }
         else
@@ -69,6 +81,10 @@ public class EditNoteActivity extends AppCompatActivity {
             boolean important = getIntent().getBooleanExtra(Constants.IMPORTANT, false);
 
             checkBoxImportant.setChecked(important);
+            checkBoxFunctional.setChecked(functional);
+            checkBoxSensory.setChecked(sensory);
+            checkBoxAcademic.setChecked(academic);
+            checkBoxBehavioral.setChecked(behavioral);
             editTextNote.setText(note);
         }
     }
@@ -80,6 +96,10 @@ public class EditNoteActivity extends AppCompatActivity {
             imageViewAction.setImageResource(R.drawable.ic_done);
             editTextNote.setEnabled(true);
             checkBoxImportant.setEnabled(true);
+            checkBoxFunctional.setEnabled(true);
+            checkBoxSensory.setEnabled(true);
+            checkBoxAcademic.setEnabled(true);
+            checkBoxBehavioral.setEnabled(true);
             editTextNote.requestFocus();
         }
         else
@@ -87,7 +107,15 @@ public class EditNoteActivity extends AppCompatActivity {
             imageViewAction.setImageResource(R.drawable.ic_edit);
             editTextNote.setEnabled(false);
             checkBoxImportant.setEnabled(false);
+            checkBoxFunctional.setEnabled(false);
+            checkBoxSensory.setEnabled(false);
+            checkBoxAcademic.setEnabled(false);
+            checkBoxBehavioral.setEnabled(false);
             isImportant = checkBoxImportant.isChecked();
+            functional = checkBoxFunctional.isChecked();
+            sensory = checkBoxSensory.isChecked();
+            academic = checkBoxAcademic.isChecked();
+            behavioral = checkBoxBehavioral.isChecked();
             noteBody = editTextNote.getText().toString();
             new Loading().execute();
         }
@@ -125,6 +153,10 @@ public class EditNoteActivity extends AppCompatActivity {
             note.setDate(date);
             note.setTimeCreated(time);
             note.setImportant(isImportant);
+            note.setFunctional(functional);
+            note.setSensory(sensory);
+            note.setAcademic(academic);
+            note.setBehavioral(behavioral);
             note.setText(noteBody);
 
             if(newNote)

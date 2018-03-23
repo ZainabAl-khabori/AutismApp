@@ -1,5 +1,7 @@
 package worldontheotherside.wordpress.com.autismapp.Adapters;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -8,6 +10,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -25,10 +28,12 @@ import android.widget.TimePicker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import worldontheotherside.wordpress.com.autismapp.API.Event;
@@ -52,6 +57,8 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private Event event;
     private Context context;
     private boolean newEvent;
+    private FragmentManager fragmentManager;
+    private String calendarJSON;
 
     private final int FIELD = 0, BODY = 1;
     private RecyclerView recyclerViewParent;
@@ -70,9 +77,20 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         String time = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(calendar.getTime());
 
+        Date idCalendar = new Gson().fromJson(calendarJSON, Date.class);
+        String idStr = new SimpleDateFormat("yyMMdd", Locale.ENGLISH).format(idCalendar);
+
+        int id = Integer.valueOf(idStr);
+        id += hr;
+
+        event.setId(id);
+
+        Log.v("EVENT_ID", String.valueOf(event.getId()));
+
         FieldViewHolder holder = (FieldViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(timeIndex);
         holder.getTextViewBody().setText(time);
         event.setTime(time);
+        new Saving().execute();
     }
 
     @Override
@@ -81,6 +99,18 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         FieldViewHolder holder = (FieldViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(ringtoneIndex);
         holder.getTextViewBody().setText(ringtone.getTitle(context));
         event.setRingtone(uri.toString());
+
+        FieldViewHolder timeHolder = (FieldViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(timeIndex);
+        if(event.getTime() == null)
+            timeHolder.getTextViewField().setTextColor(Color.RED);
+        else
+            new Saving().execute();
+    }
+
+    @Override
+    public void onActivityStopped() {
+        if(ringtone != null && ringtone.isPlaying())
+            ringtone.stop();
     }
 
     public class FieldViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -115,6 +145,8 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             if(view.getId() == imageViewEdit.getId())
             {
                 BodyViewHolder holder;
+                FieldViewHolder timeHolder = (FieldViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(timeIndex);
+
                 if(items.get(getAdapterPosition()).getTitle().equals(Constants.EVENT))
                 {
                     holder = (BodyViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(getAdapterPosition() + 1);
@@ -129,13 +161,14 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         imageViewEdit.setImageResource(R.drawable.ic_edit);
                         holder.getEditTextInfo().setEnabled(false);
                         event.setTitle(holder.getEditTextInfo().getText().toString());
+                        if(event.getTime() == null)
+                            timeHolder.getTextViewField().setTextColor(Color.RED);
                     }
                 }
 
                 if(items.get(getAdapterPosition()).getTitle().equals(Constants.TIME))
                 {
-                    timeIndex = getAdapterPosition();
-
+                    textViewField.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
                     AppCompatActivity activity = (AppCompatActivity)context;
                     TimePickerDialogFragment timeDialog = new TimePickerDialogFragment();
                     timeDialog.show(activity.getSupportFragmentManager(), "TIME_PICKER");
@@ -155,6 +188,8 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         imageViewEdit.setImageResource(R.drawable.ic_edit);
                         holder.getEditTextInfo().setEnabled(false);
                         event.setDescription(holder.getEditTextInfo().getText().toString());
+                        if(event.getTime() == null)
+                            timeHolder.getTextViewField().setTextColor(Color.RED);
                     }
                 }
 
@@ -169,6 +204,9 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                     activity.startActivityForResult(intent, Constants.RQS_RINGTONE_PICKER);
                 }
+
+                if(event.getTime() != null)
+                    new Saving().execute();
             }
 
             if(view.getId() == imageViewAction.getId())
@@ -180,6 +218,7 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             Log.v("NOTE_DELETION", "position: " + event.getTime() + " successful");
+
                             activity.setResult(activity.RESULT_OK, new Intent());
                             activity.finish();
                         }
@@ -204,14 +243,6 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     }
                 }
             }
-
-            if(imageViewEdit.getDrawable() == ContextCompat.getDrawable(context, R.drawable.ic_done))
-            {
-                FieldViewHolder timeHolder = (FieldViewHolder) recyclerViewParent.findViewHolderForAdapterPosition(timeIndex);
-                timeHolder.getTextViewField().setTextColor(Color.RED);
-            }
-
-            //new Saving().execute();
         }
     }
 
@@ -227,11 +258,14 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         public EditText getEditTextInfo() { return editTextInfo; }
     }
 
-    public EventViewRecyclerAdapter(ArrayList<EventDisplayItem> items, Event event, Context context, boolean newEvent) {
+    public EventViewRecyclerAdapter(ArrayList<EventDisplayItem> items, Event event, Context context, boolean newEvent,
+                                    FragmentManager fragmentManager, String calendarJSON) {
         this.items = items;
         this.event = event;
         this.context = context;
         this.newEvent = newEvent;
+        this.fragmentManager = fragmentManager;
+        this.calendarJSON = calendarJSON;
     }
 
     @Override
@@ -317,6 +351,9 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 break;
             case BODY: BodyViewHolder bodyViewHolder = (BodyViewHolder) holder;
 
+                if(items.get(position).getTitle().equals(Constants.EVENT_TITLE) && event.getTitle() != null)
+                    bodyViewHolder.getEditTextInfo().setText(event.getTitle());
+
                 if(items.get(position).getTitle().equals(Constants.EVENT_INFO))
                 {
                     bodyViewHolder.getEditTextInfo().setEllipsize(null);
@@ -325,6 +362,9 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     if(!newEvent)
                         bodyViewHolder.getEditTextInfo().setEnabled(false);
                     bodyViewHolder.getEditTextInfo().setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+
+                    if(event.getDescription() != null)
+                        bodyViewHolder.getEditTextInfo().setText(event.getDescription());
                 }
 
                 break;
@@ -342,15 +382,52 @@ public class EventViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         protected void onPreExecute() {
             super.onPreExecute();
 
-            AppCompatActivity activity = (AppCompatActivity) context;
-
             progressDialogFragment = ProgressDialogFragment.newProgressDialogFragment(Constants.WAIT_MESSAGE);
-            progressDialogFragment.show(activity.getSupportFragmentManager(), "PROGRESS_DIALOG");
+            progressDialogFragment.show(fragmentManager, "PROGRESS_DIALOG");
             progressDialogFragment.setCancelable(false);
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
+
+            if(newEvent)
+            {
+                DBManip.addData(AppAPI.EVENTS, email, event.getDate() + "/" + event.getTime(), event,
+                        new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        Log.v("NOTE_ADDED", "note added");
+                        newEvent = false;
+
+                        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+                        Intent intent = new Intent("event.reminder.action");
+                        intent.putExtra(Constants.DAY_DATE, event.getDate());
+                        intent.putExtra(Constants.NEW_EVENT, false);
+                        String eventJSON = new Gson().toJson(event);
+                        intent.putExtra(Constants.EVENT, eventJSON);
+                        intent.putExtra(Constants.CALENDAR, calendarJSON);
+
+                        PendingIntent broadcast = PendingIntent.getBroadcast(context, Constants.BROADCAST_REQ, intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.add(Calendar.SECOND, 5);
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
+                    }
+                });
+            }
+            else
+            {
+                DBManip.updateData(AppAPI.EVENTS, email, event.getDate() + "/" + event.getTime(), event,
+                        new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        Log.v("NOTE_ADDED", "note updated");
+                    }
+                });
+            }
+
             return null;
         }
 

@@ -41,6 +41,8 @@ public class Constants {
     public static final String FORUM = SplashScreenActivity.STRING_CONSTANTS.get(Keys.FORUM);
     public static final String CONTACT = SplashScreenActivity.STRING_CONSTANTS.get(Keys.CONTACT);
     public static final String WAIT_MESSAGE = SplashScreenActivity.STRING_CONSTANTS.get(Keys.WAIT_MESSAGE);
+    public static final String SIGN_OUT = SplashScreenActivity.STRING_CONSTANTS.get(Keys.SIGN_OUT);
+    public static final String EVENT_REMINDER = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EVENT_REMINDER);
 
     public static final String DP = "dp";
     public static final String EMPTY_FIELD_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.EMPTY_FIELD_ERROR);
@@ -48,6 +50,8 @@ public class Constants {
     public static final String QUOTA_EXCEEDED_ERROR = SplashScreenActivity.STRING_CONSTANTS.get(Keys.QUOTA_EXCEEDED_ERROR);
     public static final String NO_DP_LINK = "https://firebasestorage.googleapis.com/v0/b/autismapp-b0b6a.appspot.com/"
             +"o/dp%2Fface.png?alt=media&token=1e091434-fe6b-4b46-8aa8-cac32bb0b650";
+
+    public static final String CALENDAR = "calendar";
 
     public static final String DAY_DATE = "day date";
     public static final String NEW_NOTE = "new note";
@@ -68,4 +72,12 @@ public class Constants {
 
     public static final int DRAWER_HEADER = 0;
     public static final int DRAWER_ITEM = 1;
+
+    public static final int SET_EVENT_REQ = 2;
+    public static final String EVENT_DAYS_LIST = "event days list";
+
+    public static final int NEW_ARTICLE_REQ = 3;
+
+    public static final int BROADCAST_REQ = 4;
+    public static final int OPEN_EVENT_REQ = 5;
 }

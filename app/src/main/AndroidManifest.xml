@@ -51,22 +51,35 @@
             android:name=".Activities.ArticleMainActivity"
             android:label="@string/title_activity_artical_main"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
+
+            <!--
+                <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".Activities.ArticleDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
+
+            <!--
+                <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
-        <activity android:name=".Activities.NewArticleActivity"></activity>
-    </application>
+        <activity android:name=".Activities.NewArticleActivity" />
+        <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.ChildProfileActivity"></activity>
 
+        <receiver android:name=".Adapters.ReminderReceiver">
+            <intent-filter>
+                <action android:name="event.reminder.action" />
+            </intent-filter>
+        </receiver>
+    </application>
 </manifest>

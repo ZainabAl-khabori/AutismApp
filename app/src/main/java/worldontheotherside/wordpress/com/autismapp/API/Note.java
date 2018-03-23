@@ -12,6 +12,10 @@ public class Note {
     private String date;
     private String timeCreated;
     private boolean important;
+    private boolean functional;
+    private boolean sensory;
+    private boolean academic;
+    private boolean behavioral;
 
     public Note()
     {
@@ -28,6 +32,10 @@ public class Note {
             this.date = note.date;
             this.timeCreated = note.timeCreated;
             this.important = note.important;
+            this.behavioral = note.behavioral;
+            this.functional = note.functional;
+            this.sensory = note.sensory;
+            this.academic = note.academic;
         }
     }
 
@@ -46,4 +54,20 @@ public class Note {
     public boolean isImportant() { return important; }
 
     public void setImportant(boolean important) { this.important = important; }
+
+    public boolean isFunctional() { return functional; }
+
+    public void setFunctional(boolean functional) { this.functional = functional; }
+
+    public boolean isSensory() { return sensory; }
+
+    public void setSensory(boolean sensory) { this.sensory = sensory; }
+
+    public boolean isAcademic() { return academic; }
+
+    public void setAcademic(boolean academic) { this.academic = academic; }
+
+    public boolean isBehavioral() { return behavioral; }
+
+    public void setBehavioral(boolean behavioral) { this.behavioral = behavioral; }
 }

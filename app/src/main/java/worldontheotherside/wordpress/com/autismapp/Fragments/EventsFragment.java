@@ -1,5 +1,6 @@
 package worldontheotherside.wordpress.com.autismapp.Fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
@@ -43,12 +45,15 @@ public class EventsFragment extends Fragment {
     private ArrayList<Event> data;
 
     private String date;
+    private String calendar;
+    private String email;
 
-    public static EventsFragment newInstance(String date)
+    public static EventsFragment newInstance(String date, String calendar)
     {
         EventsFragment eventsFragment = new EventsFragment();
         Bundle args = new Bundle();
         args.putString(Constants.DAY_DATE, date);
+        args.putString(Constants.CALENDAR, calendar);
         eventsFragment.setArguments(args);
         return eventsFragment;
     }
@@ -69,7 +74,8 @@ public class EventsFragment extends Fragment {
         recyclerViewEvents.setLayoutManager(layoutManager);
 
         date = getArguments().getString(Constants.DAY_DATE);
-        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        calendar = getArguments().getString(Constants.CALENDAR);
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         email = email.replace('@', '_');
         email = email.replace('.', '_');
         DBManip.getData(AppAPI.EVENTS, email + "/" + date, new ValueEventListener() {
@@ -85,6 +91,7 @@ public class EventsFragment extends Fragment {
                         Intent intent = new Intent(getContext(), EditEventActivity.class);
                         intent.putExtra(Constants.DAY_DATE, date);
                         intent.putExtra(Constants.NEW_EVENT, true);
+                        intent.putExtra(Constants.CALENDAR, calendar);
                         startActivityForResult(intent, Constants.DELETE_ACTION_REQ);
                     }
                 });
@@ -99,9 +106,20 @@ public class EventsFragment extends Fragment {
                         intent.putExtra(Constants.DAY_DATE, date);
                         intent.putExtra(Constants.NEW_EVENT, false);
                         intent.putExtra(Constants.EVENT, eventJSON);
+                        intent.putExtra(Constants.CALENDAR, calendar);
                         startActivityForResult(intent, Constants.DELETE_ACTION_REQ);
                     }
                 });
+
+                DBManip.deleteData(AppAPI.EVENT_DAYS, email, date, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        Log.v("DELETION_COMPLETE", "event day deleted");
+                    }
+                });
+
+                if(recyclerViewEvents.getAdapter().getItemCount() > 0)
+                    getActivity().setResult(Activity.RESULT_OK, new Intent());
             }
 
             @Override

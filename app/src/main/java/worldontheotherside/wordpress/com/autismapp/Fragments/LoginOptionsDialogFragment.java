@@ -16,11 +16,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import worldontheotherside.wordpress.com.autismapp.API.EventDays;
 import worldontheotherside.wordpress.com.autismapp.Activities.MainActivity;
+import worldontheotherside.wordpress.com.autismapp.Data.Constants;
+import worldontheotherside.wordpress.com.autismapp.Database.AppAPI;
+import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 /**
@@ -34,8 +43,12 @@ public class LoginOptionsDialogFragment extends BottomSheetDialogFragment implem
 
     private EmailLoginDialogFragment emailLoginDialogFragment;
 
+    private Intent intent;
+
     private String email;
     private String password;
+
+    private ArrayList<String> eventDaysList;
 
     public LoginOptionsDialogFragment()
     {
@@ -143,6 +156,8 @@ public class LoginOptionsDialogFragment extends BottomSheetDialogFragment implem
         private ProgressDialogFragment progressDialogFragment;
         private boolean done = false;
 
+        private boolean data = false;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -156,6 +171,8 @@ public class LoginOptionsDialogFragment extends BottomSheetDialogFragment implem
 
         @Override
         protected Void doInBackground(Void... voids) {
+
+            intent = new Intent(getContext(), MainActivity.class);
 
             emailLogin();
 
@@ -176,7 +193,6 @@ public class LoginOptionsDialogFragment extends BottomSheetDialogFragment implem
 
             if(done)
             {
-                Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -184,12 +200,15 @@ public class LoginOptionsDialogFragment extends BottomSheetDialogFragment implem
 
         private void emailLogin()
         {
-            FirebaseAuth auth = FirebaseAuth.getInstance();
+            final FirebaseAuth auth = FirebaseAuth.getInstance();
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(Task<AuthResult> task) {
                     if(task.isSuccessful())
-                        getUserData();
+                    {
+                        FirebaseUser user = auth.getCurrentUser();
+                        getUserData(user);
+                    }
                     else
                     {
                         Log.v("LOGIN_FAILED", task.getException().getMessage());
@@ -199,8 +218,27 @@ public class LoginOptionsDialogFragment extends BottomSheetDialogFragment implem
             });
         }
 
-        private void getUserData()
+        private void getUserData(FirebaseUser user)
         {
+/*            while(!data)
+            {*/
+                DBManip.getData(AppAPI.EVENT_DAYS, user.getEmail(), new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        EventDays eventDays = new EventDays(dataSnapshot);
+                        eventDaysList = eventDays.getEventDays();
+                        if(!eventDaysList.isEmpty())
+                            data = true;
+                        intent.putStringArrayListExtra(Constants.EVENT_DAYS_LIST, eventDaysList);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+/*            }*/
+
             done = true;
         }
     }

@@ -13,6 +13,7 @@ public class Event {
     private String date;
     private String time;
     private String ringtone;
+    private int id;
 
     public Event()
     {
@@ -30,6 +31,7 @@ public class Event {
             date = event.date;
             time = event.time;
             ringtone = event.ringtone;
+            id = event.id;
         }
     }
 
@@ -52,4 +54,8 @@ public class Event {
     public String getRingtone() { return ringtone; }
 
     public void setRingtone(String ringtone) { this.ringtone = ringtone; }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 }

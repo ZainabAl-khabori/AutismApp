@@ -21,16 +21,13 @@ public class Child {
 
     public Child(DataSnapshot dataSnapshot)
     {
-        for(DataSnapshot snapshot: dataSnapshot.getChildren())
-        {
-            Child child = snapshot.getValue(Child.class);
+        Child child = dataSnapshot.getValue(Child.class);
 
-            name = child.name;
-            gender = child.gender;
-            age = child.age;
-            photo = child.photo;
-            autismSpectrumScore = child.autismSpectrumScore;
-        }
+        name = child.name;
+        gender = child.gender;
+        age = child.age;
+        photo = child.photo;
+        autismSpectrumScore = child.autismSpectrumScore;
     }
 
     public String getName() {

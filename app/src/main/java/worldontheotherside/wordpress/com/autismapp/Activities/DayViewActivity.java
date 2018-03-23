@@ -4,6 +4,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import worldontheotherside.wordpress.com.autismapp.Adapters.DayViewPagerAdapter;
@@ -22,7 +23,8 @@ public class DayViewActivity extends AppCompatActivity {
         ViewPager viewPagerTabs = (ViewPager) findViewById(R.id.viewPagerTabs);
 
         String date = getIntent().getStringExtra(Constants.DAY_DATE);
-        DayViewPagerAdapter adapter = new DayViewPagerAdapter(getSupportFragmentManager(), date);
+        String calendar = getIntent().getStringExtra(Constants.CALENDAR);
+        DayViewPagerAdapter adapter = new DayViewPagerAdapter(getSupportFragmentManager(), date, calendar);
 
         viewPagerTabs.setAdapter(adapter);
         tabLayoutTabs.setupWithViewPager(viewPagerTabs);

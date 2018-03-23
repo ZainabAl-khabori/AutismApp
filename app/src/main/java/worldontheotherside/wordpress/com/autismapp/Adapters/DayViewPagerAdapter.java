@@ -3,6 +3,7 @@ package worldontheotherside.wordpress.com.autismapp.Adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Fragments.DayNotesFragment;
@@ -19,10 +20,11 @@ public class DayViewPagerAdapter extends FragmentPagerAdapter {
     private DayNotesFragment dayNotesFragment;
     private EventsFragment eventsFragment;
 
-    public DayViewPagerAdapter(FragmentManager fm, String date) {
+    public DayViewPagerAdapter(FragmentManager fm, String date, String calendar) {
         super(fm);
+
         dayNotesFragment = DayNotesFragment.newInstance(date);
-        eventsFragment = EventsFragment.newInstance(date);
+        eventsFragment = EventsFragment.newInstance(date, calendar);
     }
 
     @Override

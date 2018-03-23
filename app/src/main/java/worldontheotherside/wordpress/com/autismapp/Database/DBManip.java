@@ -72,6 +72,20 @@ public class DBManip {
         db.child(path).setValue(data, completionListener);
     }
 
+    public static void addDataUnique(String url, String email, Object data, DatabaseReference.CompletionListener completionListener)
+    {
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        String path = email.replace('@', '_');
+        path = path.replace('.', '_');
+        db.child(path).push().setValue(data, completionListener);
+    }
+
+    public static void addData(String url, Object data, DatabaseReference.CompletionListener completionListener)
+    {
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
+        db.push().setValue(data, completionListener);
+    }
+
     public static void addData(String url, String email, String field, Object data,
                                DatabaseReference.CompletionListener completionListener)
     {
@@ -81,11 +95,9 @@ public class DBManip {
         db.child(path).child(field).setValue(data, completionListener);
     }
 
-    public static void updateData(String url, String email, Object data, DatabaseReference.CompletionListener completionListener)
+    public static void updateData(String url, String key, Object data, DatabaseReference.CompletionListener completionListener)
     {
-        String path = email.replace('@', '_');
-        path = path.replace('.', '_');
-        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(email);
+        db = FirebaseDatabase.getInstance().getReferenceFromUrl(url).child(key);
         db.setValue(data, completionListener);
     }
 

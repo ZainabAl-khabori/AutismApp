@@ -14,4 +14,6 @@ public class AppAPI {
     public static String NOTES = db.child("notes").toString();
     public static String CHILDREN = db.child("children").toString();
     public static String EVENTS = db.child("events").toString();
+    public static String EVENT_DAYS = db.child("event_days").toString();
+    public static String ARTICLES = db.child("articlesList").toString();
 }

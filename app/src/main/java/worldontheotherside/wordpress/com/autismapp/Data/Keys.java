@@ -36,6 +36,8 @@ public class Keys {
     public static final String FORUM = "forum";
     public static final String CONTACT = "contact";
     public static final String WAIT_MESSAGE = "wait message";
+    public static final String SIGN_OUT = "sign out";
+    public static final String EVENT_REMINDER = "event reminder";
 
     public static final String VERIFICATION_IN_PROGRESS = "verification in progress";
 

@@ -1,20 +1,27 @@
 package worldontheotherside.wordpress.com.autismapp.API;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by OJP on 3/18/2018.
  */
 
+
 public class Article implements Serializable {
 
-    private String articleId;
+     private String articleId;
     private String articleTitle;
     private String articleContent;
     private String articleDetails;
     private String articleImageURL;
+
     private String articleWriterName;
     private String articleWriterImageURL;
+
+
+    private HashMap<String, Comments> commentsList = new HashMap<> ();
+    private Comments mComment = new Comments ();
 
     public String getArticleTitle () {
         return articleTitle;
@@ -71,4 +78,23 @@ public class Article implements Serializable {
     public void setArticleId (String articleId) {
         this.articleId = articleId;
     }
+
+
+
+    public Comments getmComment () {
+        return mComment;
+    }
+
+    public void setmComment (Comments mComment) {
+        this.mComment = mComment;
+    }
+
+    public HashMap<String, Comments> getCommentsList () {
+        return commentsList;
+    }
+
+    public void setCommentsList (HashMap<String, Comments> commentsList) {
+        this.commentsList = commentsList;
+    }
 }
+

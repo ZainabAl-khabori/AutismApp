@@ -5,16 +5,19 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.TimePicker;
 
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -29,8 +32,13 @@ public class EditEventActivity extends AppCompatActivity implements TimePickerDi
     private OnTimeSelectedListener onTimeSelectedListener;
     private OnRingtoneSelectedListener onRingtoneSelectedListener;
 
+    private Ringtone ringtone;
+
     public interface OnTimeSelectedListener { void onTimeSelected(TimePicker view, int hr, int min); }
-    public interface OnRingtoneSelectedListener { void onRingtoneSelected(Ringtone ringtone, Uri uri); }
+    public interface OnRingtoneSelectedListener {
+        void onRingtoneSelected(Ringtone ringtone, Uri uri);
+        void onActivityStopped();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,9 @@ public class EditEventActivity extends AppCompatActivity implements TimePickerDi
         String date = getIntent().getStringExtra(Constants.DAY_DATE);
         boolean newEvent = getIntent().getBooleanExtra(Constants.NEW_EVENT, false);
         String eventJSON = getIntent().getStringExtra(Constants.EVENT);
+        String calendarJSON = getIntent().getStringExtra(Constants.CALENDAR);
+
+        Log.v("JSON", calendarJSON);
 
         Event event;
 
@@ -47,6 +58,7 @@ public class EditEventActivity extends AppCompatActivity implements TimePickerDi
         {
             event = new Event();
             event.setDate(date);
+            event.setRingtone(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
         }
         else
             event = new Gson().fromJson(eventJSON, Event.class);
@@ -62,7 +74,8 @@ public class EditEventActivity extends AppCompatActivity implements TimePickerDi
 
         RecyclerView recyclerViewEventDisplay = (RecyclerView) findViewById(R.id.recyclerViewEventDisplay);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        EventViewRecyclerAdapter adapter = new EventViewRecyclerAdapter(items, event, this, newEvent);
+        EventViewRecyclerAdapter adapter = new EventViewRecyclerAdapter(items, event, this, newEvent,
+                getSupportFragmentManager(), calendarJSON);
 
         recyclerViewEventDisplay.setLayoutManager(layoutManager);
         recyclerViewEventDisplay.setAdapter(adapter);
@@ -76,8 +89,14 @@ public class EditEventActivity extends AppCompatActivity implements TimePickerDi
         {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), uri);
-            onRingtoneSelectedListener.onRingtoneSelected(ringtone, data.getData());
+            onRingtoneSelectedListener.onRingtoneSelected(ringtone, uri);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        onRingtoneSelectedListener.onActivityStopped();
     }
 
     @Override

@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 
 import worldontheotherside.wordpress.com.autismapp.API.DrawerItem;
 import worldontheotherside.wordpress.com.autismapp.API.User;
+import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 /**
@@ -76,7 +80,18 @@ public class DrawerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public void onClick(View view) {
             AppCompatActivity activity = (AppCompatActivity) context;
             Intent intent = new Intent(context, items.get(getAdapterPosition()).getActivityClass());
+            if(items.get(getAdapterPosition()).getTitle().equals(Constants.SIGN_OUT))
+            {
+                AuthUI.getInstance().signOut(context).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(Task<Void> task) {
+                        Log.v("SIGNOUT", "signed out");
+                    }
+                });
+            }
             activity.startActivity(intent);
+            if(items.get(getAdapterPosition()).getTitle().equals(Constants.SIGN_OUT))
+                activity.finish();
         }
     }
 
@@ -112,8 +127,7 @@ public class DrawerRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         switch(holder.getItemViewType())
         {
             case HEADER: HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
-                if(user.getDpUri() != null)
-                    Picasso.with(context).load(user.getDpUri()).into(headerViewHolder.getImageViewDp());
+                Picasso.get().load(user.getDpUri()).into(headerViewHolder.getImageViewDp());
                 Log.v("USERNAME", user.getUsername());
                 headerViewHolder.getTextViewUsername().setText(user.getUsername());
                 break;

@@ -68,5 +68,18 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="home">Home</string>
+    <string name="sign_out">Sign out</string>
+    <string name="article_s_title">Article\'s title</string>
+    <string name="content">Content:</string>
+    <string name="publish_article">Publish article</string>
+    <string name="add_a_picture">Add a picture</string>
+    <string name="uname">Username:</string>
+    <string name="phone">Phone number:</string>
+    <string name="email">Email address:</string>
+    <string name="event_reminder">You have an event in 2 days at</string>
+    <string name="functional_skills">Functional skills</string>
+    <string name="sensory_skills">Sensory skills</string>
+    <string name="academic_skills">Academic skills</string>
+    <string name="behavior_skills">Behavior skills</string>
 
 </resources>

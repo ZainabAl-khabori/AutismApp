@@ -77,18 +77,19 @@ public class InfoMainActivity extends AppCompatActivity {
 
         Info info = new Info ();// this class will help us to save data easily !
         //set the  title >> it can be Book name or Topic title ...
-        info.setInfoTitle ("Autism Book");
+        info.setInfoTitle ("ما هي اضطرابات طيف التوحد؟");
 
         //set the description of the Topic or the website ....
-        info.setInfoDescription ("this Book has will help you identify the level of Autism of a patient ...");
+        info.setInfoDescription ("سيساعدك هذا المستند على معرفة اضطراب طيف التوحد بشكل عام");
 
         // we can add book url or download >>
-        info.setInfoPageURL ("https://jsonlint.com/");
+        info.setInfoPageURL ("https://firebasestorage.googleapis.com/v0/b/autismapp-b0b6a.appspot.com/o/material%2FInfo-Pack-for"
+                + "-translation-Arabic.pdf?alt=media&token=69b19a8d-8b4c-400a-a0eb-bb5c4e5324e6");
 
         infoList.add (info); //adding item 1 to list
 
 
-        // item number 2
+/*        // item number 2
         info = new Info ();// save the second Book
         //set the  title >> it can be Book name or Topic title ...
         info.setInfoTitle ("Solve My Autism");
@@ -138,7 +139,7 @@ public class InfoMainActivity extends AppCompatActivity {
 
         // we can add the url >>
         info.setInfoPageURL ("https://www.tutorialspoint.com/android/index.html");
-        infoList.add (info);// adding item 5 to list
+        infoList.add (info);// adding item 5 to list*/
 
 
         displayInfo (infoList);

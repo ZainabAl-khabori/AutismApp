@@ -12,5 +12,6 @@
         android:ems="10"
         android:gravity="top"
         android:inputType="text"
+        android:enabled="false"
         android:textColor="@android:color/black" />
 </LinearLayout>

@@ -48,6 +48,48 @@
 
     </LinearLayout>
 
+    <CheckBox
+        android:id="@+id/checkBoxFunctionalSkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:enabled="false"
+        android:text="@string/functional_skills"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxSensorySkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:enabled="false"
+        android:text="@string/sensory_skills"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxAcademicSkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:enabled="false"
+        android:text="@string/academic_skills"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxBehavioralSkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:enabled="false"
+        android:text="@string/behavior_skills"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+
     <EditText
         android:id="@+id/editTextNote"
         android:layout_width="match_parent"

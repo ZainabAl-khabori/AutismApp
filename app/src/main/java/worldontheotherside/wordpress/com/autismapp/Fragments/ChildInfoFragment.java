@@ -164,7 +164,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         if(resultCode == getActivity().RESULT_OK)
         {
             textViewUri.setText(data.getData().toString());
-            Picasso.with(getContext()).load(data.getData()).into(imageViewDp);
+            Picasso.get().load(data.getData()).into(imageViewDp);
         }
     }
 
@@ -396,6 +396,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
         {
             final String email = personalInfo.get(Constants.EMAIL);
             final String password = personalInfo.get(Constants.PASSWORD);
+            personalInfo.put(Constants.DP, Constants.NO_DP_LINK);
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                         @Override
@@ -431,7 +432,7 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 Uri path = Uri.parse(childInfo.get(Constants.CHILD_PHOTO));
 
-                storage.getReference().child("dp/" + path.getLastPathSegment()).putFile(path)
+                storage.getReference().child("children/" + path.getLastPathSegment()).putFile(path)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -452,6 +453,14 @@ public class ChildInfoFragment extends Fragment implements ChildInfoRecyclerAdap
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     Log.v("CHILD_INFO_ADDED", "child info added");
+                }
+            });
+
+            DBManip.addData(AppAPI.EVENT_DAYS, personalInfo.get(Constants.EMAIL), "dummy", Constants.EVENT_DAYS_LIST,
+                    new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    Log.v("EVENT_DAYS", "dummy data added");
                 }
             });
         }

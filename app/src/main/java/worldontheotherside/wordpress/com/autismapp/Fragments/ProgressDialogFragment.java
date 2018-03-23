@@ -2,6 +2,9 @@ package worldontheotherside.wordpress.com.autismapp.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,5 +47,19 @@ public class ProgressDialogFragment extends DialogFragment {
 
         textViewMessage = (TextView) view.findViewById(R.id.textViewMessage);
         textViewMessage.setText(getArguments().getString(Keys.PROGRESS_DIALOG_MESSAGE));
+    }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        try
+        {
+            FragmentTransaction fragmentTransaction = manager.beginTransaction();
+            fragmentTransaction.add(this, tag);
+            fragmentTransaction.commit();
+        }
+        catch (IllegalStateException e)
+        {
+            Log.v("Exception", e.getMessage());
+        }
     }
 }

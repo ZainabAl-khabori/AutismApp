@@ -9,16 +9,29 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import worldontheotherside.wordpress.com.autismapp.API.EventDays;
+import worldontheotherside.wordpress.com.autismapp.Adapters.EventViewRecyclerAdapter;
+import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Data.Keys;
+import worldontheotherside.wordpress.com.autismapp.Database.AppAPI;
+import worldontheotherside.wordpress.com.autismapp.Database.DBManip;
 import worldontheotherside.wordpress.com.autismapp.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
     private FirebaseUser user;
     private Intent intent;
+
+    private ArrayList<String> eventDaysList;
 
     public static HashMap<String, String> STRING_CONSTANTS = new HashMap<>();
 
@@ -34,17 +47,39 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private class Loading extends AsyncTask<Void, Void, Void>
     {
+        private boolean data = false;
+
         @Override
         protected void onPreExecute() { super.onPreExecute(); }
 
         @Override
         protected Void doInBackground(Void... voids) {
             if(user != null)
-                intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-            else
             {
-                intent = new Intent(SplashScreenActivity.this, StartupActivity.class);
+                intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+
+                while(!data)
+                {
+                    DBManip.getData(AppAPI.EVENT_DAYS, user.getEmail(), new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            EventDays eventDays = new EventDays(dataSnapshot);
+                            eventDaysList = eventDays.getEventDays();
+                            if(!eventDaysList.isEmpty())
+                                data = true;
+                            intent.putStringArrayListExtra(Constants.EVENT_DAYS_LIST, eventDaysList);
+                            Log.v("EVENTS_LIST", ""+data);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
             }
+            else
+                intent = new Intent(SplashScreenActivity.this, StartupActivity.class);
 
             STRING_CONSTANTS.put(Keys.NAME, getString(R.string.name));
             STRING_CONSTANTS.put(Keys.USERNAME, getString(R.string.username));
@@ -77,6 +112,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             STRING_CONSTANTS.put(Keys.FORUM, getString(R.string.forum));
             STRING_CONSTANTS.put(Keys.CONTACT, getString(R.string.contact));
             STRING_CONSTANTS.put(Keys.WAIT_MESSAGE, getString(R.string.please_wait_a_moment));
+            STRING_CONSTANTS.put(Keys.SIGN_OUT, getString(R.string.sign_out));
+            STRING_CONSTANTS.put(Keys.EVENT_REMINDER, getString(R.string.event_reminder));
 
             return null;
         }

@@ -49,23 +49,25 @@
         android:id="@+id/tv_article_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/app_bar"
-        android:layout_margin="4dp"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
         android:text="By  Jack,  18-3-2018 "
         android:textColor="@color/textColorSecondary"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_below="@+id/app_bar"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/iv_article_writer_image"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_alignParentEnd="true"
+        android:contentDescription="Article Writer image"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_below="@+id/tv_article_details"
-        android:layout_margin="12dp"
-        android:background="@color/colorAccent"
-        android:contentDescription="Article Writer image" />
+        android:layout_alignStart="@+id/tv_article_writer_name" />
 
     <TextView
         android:id="@+id/tv_article_writer_name"
@@ -94,58 +96,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
-                android:background="@color/colorAccent"
                 android:src="@drawable/face" />
 
             <TextView
-                android:id="@+id/tv_article_description"
+                android:id="@+id/tv_article_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/iv_article_image"
                 android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:text="addf.f
-
-
-
-
-                m.smfsmf
-
-
-                .sefes.,fe.s
-
-
-                mf.esmf.esfesfmsf
-efsefsfs
-
-
-
-
-fefffsfs fes f sef s f s fs f e fs ef s
-f
- sf dnawdlnw
- andla'
- dlkawjd
- l adja dakd'
-
-  kjaw da dkawd wa, kjnejkf kbf s fskf  dj dh asdad ajd ad ad ajd ajd awdhwdhawdawdkawdjawdadlwjwldjadjalwjdalwdjadjwlajdmalkdwajdiowaljdwlajdwaldka da,nda dajddnadljnad
-   aada dadajdadakdad adada ldoa da dad ajdwadnajwdhad adjawndjalwijidlawd awd ,ad awdalwd awdaw daw dawd awdnliawjdjlajwdlawjdawd
-   ada;dnkawdjad
-   adpawdoawdoawidjawojdawojdawojdawd
-   adaw
-   dowajdadjwadjadoawjdoajdwoad
-   wad
-   wad
-   adoadadjwajdowad
-   wadwad
-   owadw
-   ada
-   dwa
-   da
-   dwada dkawdnandawn
-  dkandkandnawndakndakndwandknwa
-  dknwajndkjandwdawdad
- f" />
+                android:layout_marginStart="12dp" />
 
         </RelativeLayout>
 
