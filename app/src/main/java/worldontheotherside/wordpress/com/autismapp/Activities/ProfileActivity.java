@@ -1,6 +1,8 @@
 package worldontheotherside.wordpress.com.autismapp.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -25,9 +27,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.HashMap;
 
+import worldontheotherside.wordpress.com.autismapp.API.CircularDrawable;
 import worldontheotherside.wordpress.com.autismapp.API.User;
 import worldontheotherside.wordpress.com.autismapp.Data.Constants;
 import worldontheotherside.wordpress.com.autismapp.Database.AppAPI;
@@ -69,7 +73,27 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User userData = User.fromDB(dataSnapshot);
-                Picasso.get().load(userData.getDpUri()).into(imageViewDp);
+
+                Target target = new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        imageViewDp.setImageResource(android.R.color.transparent);
+                        imageViewDp.setBackground(new CircularDrawable(bitmap));
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                };
+
+                Picasso.get().load(userData.getDpUri()).into(target);
+
                 String profile = userData.getUsername() + "'s profile";
                 textViewUserProfile.setText(profile);
                 textViewEmail.setText(firebaseUser.getEmail());

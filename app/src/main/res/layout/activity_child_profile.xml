@@ -18,7 +18,12 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/dp" />
+            android:maxHeight="150dp"
+            android:maxWidth="150dp"
+            android:minHeight="150dp"
+            android:minWidth="150dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_dp" />
 
         <ImageView
             android:id="@+id/imageViewEditDp"
@@ -166,7 +171,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textViewPhone"
+            android:id="@+id/textViewScore"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

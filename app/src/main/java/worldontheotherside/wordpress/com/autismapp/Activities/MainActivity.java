@@ -125,9 +125,9 @@ public class MainActivity extends AppCompatActivity implements OnDayClickListene
         items.add(new DrawerItem("", 0, Constants.DRAWER_HEADER, null));
         items.add(new DrawerItem(getString(R.string.my_profile), R.drawable.ic_username,
                 Constants.DRAWER_ITEM, ProfileActivity.class));
-/*        items.add(new DrawerItem(getString(R.string.my_child_s_profile), R.drawable.ic_baby,
-                Constants.DRAWER_ITEM, ChildProfileActivity.class));*/
-        items.add(new DrawerItem(Constants.KNOWLEDGE, R.drawable.ic_score,
+        items.add(new DrawerItem(getString(R.string.my_child_s_profile), R.drawable.ic_baby,
+                Constants.DRAWER_ITEM, ChildProfileActivity.class));
+        /*items.add(new DrawerItem(Constants.KNOWLEDGE, R.drawable.ic_score,
                 Constants.DRAWER_ITEM, InfoMainActivity.class));
         items.add(new DrawerItem(getString(R.string.forum), R.drawable.ic_forum,
                 Constants.DRAWER_ITEM, ArticleMainActivity.class));
