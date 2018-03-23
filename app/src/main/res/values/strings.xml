@@ -81,5 +81,9 @@
     <string name="sensory_skills">Sensory skills</string>
     <string name="academic_skills">Academic skills</string>
     <string name="behavior_skills">Behavior skills</string>
+    <string name="child_name">My child\'s name:</string>
+    <string name="child_age">My child\'s age:</string>
+    <string name="child_gender">Gender:</string>
+    <string name="spectrum_score">Autism spectrum score:</string>
 
 </resources>
